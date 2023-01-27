@@ -15,6 +15,8 @@ private:
 	class KinematicBody* body;
 	class Scene* scene;
 
+	void SteerToSeekPlayer(SteeringOutput* steering);
+
 public:
 	Character()
 	{
@@ -26,6 +28,8 @@ public:
 	{
 		if (body) delete body;
 	};
+
+	
 
 	bool OnCreate(Scene* scene_);
 	void OnDestroy() {};

@@ -60,7 +60,24 @@ void Character::Update(float deltaTime)
 {
 	// create a new overall steering output
 	SteeringOutput* steering;
-	steering = NULL;
+	steering = new SteeringOutput();
+
+	SteerToSeekPlayer(steering);
+
+	// apply the steering to the equations of motion
+	body->Update(deltaTime, steering);
+
+	// clean up memory
+	// (delete only those objects created in this function)
+	if (steering)
+	{
+		delete steering;
+	}
+}
+
+void Character::SteerToSeekPlayer(SteeringOutput* steering)
+{
+	vector<SteeringOutput*> steering_outputs;
 
 	// set the target for steering; target is used by the steerTo... functions
 	// (often the target is the Player)
@@ -68,10 +85,19 @@ void Character::Update(float deltaTime)
 
 	// using the target, calculate and set values in the overall steering output
 	SteeringBehaviour* steering_algorithm = new Seek(body, target); //dynamic steering algo's should derive from the base steeringBehaviour class
-	steering = steering_algorithm->getSteering();
+	
+	steering_outputs.push_back(steering_algorithm->getSteering());
 
-	// apply the steering to the equations of motion
-	body->Update(deltaTime, steering);
+	// add in some other algorithms
+
+	// Add together steering outputs
+	for (int i = 0; i < steering_outputs.size(); i++)
+	{
+		if (steering_outputs[i])
+		{
+			*steering += *steering_outputs[i];
+		}
+	}
 
 	// clean up memory
 	// (delete only those objects created in this function)

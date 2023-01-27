@@ -52,7 +52,7 @@ bool Character::setTextureWidth(string file)
 		return false;
 	}
 	body->setTexture(texture);
-	return texture;
+	return true;
 }
 
 
@@ -64,14 +64,21 @@ void Character::Update(float deltaTime)
 
 	// set the target for steering; target is used by the steerTo... functions
 	// (often the target is the Player)
+	PlayerBody* target = scene->game->getPlayer();
 
 	// using the target, calculate and set values in the overall steering output
+	SteeringBehaviour* steering_algorithm = new Seek(body, target); //dynamic steering algo's should derive from the base steeringBehaviour class
+	steering = steering_algorithm->getSteering();
 
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);
 
 	// clean up memory
 	// (delete only those objects created in this function)
+	if (steering_algorithm)
+	{
+		delete steering_algorithm;
+	}
 }
 
 void Character::HandleEvents(const SDL_Event& event)

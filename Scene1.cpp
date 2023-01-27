@@ -66,8 +66,6 @@ bool Scene1::OnCreate() {
 	SDL_FreeSurface(image);
 
 	
-
-
 	blinky = new Character();
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png") )
 	{
@@ -75,7 +73,6 @@ bool Scene1::OnCreate() {
 	}
 
 	// end of character set ups
-
 	return true;
 }
 
@@ -94,29 +91,30 @@ void Scene1::OnDestroy() {
 
 void Scene1::Update(const float deltaTime) {
 	// Calculate and apply any steering for npc's
-	//blinky->Update(deltaTime);
 
 	Body* player;                              //player pointer is a pointer to body
 	player = game->getPlayer();                //returns a pointer to a player body
 
-	// STEERING calculation
+	/// STEERING calculation
 	KinematicSteeringOutput* steering;
 	steering = NULL;
 
 	/// create KinematicSeek
 	KinematicSeek* steeringAlgorithm;
 	
-	//steeringAlgorithm = new KinematicSeek(myNPC, player);
-	//steering = steeringAlgorithm->getSteering();
+	steeringAlgorithm = new KinematicSeek(myNPC, player);
+	steering = steeringAlgorithm->getSteering();
 
-	//create Kinematic arrive
-	KinematicArrive* arriveAlgorithm;
-	arriveAlgorithm = new KinematicArrive(myNPC, player);
-	steering = arriveAlgorithm->getSteering();
+	/// create Kinematic arrive
+	//KinematicArrive* steeringAlgorithm;
+	//steeringAlgorithm = new KinematicArrive(myNPC, player);
+	//steering = steeringAlgorithm->getSteering();
 	//calculate KinematicSteeringOutput
 
-	myNPC->Update(deltaTime, steering);
-	// Update player
+
+	/// Update player and characters
+	//myNPC->Update(deltaTime, steering);
+	blinky->Update(deltaTime);
 	game->getPlayer()->Update(deltaTime);
 
 	/// Memory clean up
@@ -154,11 +152,12 @@ void Scene1::Render() {
 	// Convert character orientation from radians to degrees.
 	float orientationDegrees = orientation * 180.0f / M_PI;
 
-	SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
-		orientationDegrees, nullptr, SDL_FLIP_NONE);
+	// Render the NPC
+	//SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
+    //     orientationDegrees, nullptr, SDL_FLIP_NONE);
 
 	
-	//blinky->render(0.15f);
+	blinky->render(0.15f);
 
 	// render the player
 	game->RenderPlayer(0.10f);

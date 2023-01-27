@@ -4,9 +4,7 @@
 #include "Body.h"
 #include "SteeringOutput.h"
 
-class KinematicBody :
-		public Body
-{
+class KinematicBody : public Body  {
 protected:
 
 public:

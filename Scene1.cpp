@@ -52,7 +52,7 @@ bool Scene1::OnCreate() {
 	Vec3 acceleration = Vec3();*/
 	//float mass = 1.0f;
 	float orientation = 0.0f;
-	float maxSpeed = 5.0f;
+	float maxSpeed = 2.0f;   //want to make max speed of ncp smaller than player
 	float maxRotation = 1.0f;
 	myNPC = new StaticBody(
 		position,
@@ -79,7 +79,18 @@ bool Scene1::OnCreate() {
 	return true;
 }
 
-void Scene1::OnDestroy() {}
+void Scene1::OnDestroy() {
+	if (blinky)
+	{
+		blinky->OnDestroy();
+		delete blinky;
+	}
+
+	if (myNPC)
+	{
+		delete myNPC;
+	}
+}
 
 void Scene1::Update(const float deltaTime) {
 	// Calculate and apply any steering for npc's
@@ -92,8 +103,8 @@ void Scene1::Update(const float deltaTime) {
 	KinematicSteeringOutput* steering;
 	steering = NULL;
 
-	//create KinematicSeek
-	//KinematicSeek* steeringAlgorithm;
+	/// create KinematicSeek
+	KinematicSeek* steeringAlgorithm;
 	
 	//steeringAlgorithm = new KinematicSeek(myNPC, player);
 	//steering = steeringAlgorithm->getSteering();
@@ -107,6 +118,12 @@ void Scene1::Update(const float deltaTime) {
 	myNPC->Update(deltaTime, steering);
 	// Update player
 	game->getPlayer()->Update(deltaTime);
+
+	/// Memory clean up
+	if (steeringAlgorithm)
+	{
+		delete steeringAlgorithm;
+	}
 }
 
 void Scene1::Render() {
@@ -128,10 +145,10 @@ void Scene1::Render() {
 	// where SDL will draw the .png image
 	// The 0.5f * w/h offset is to place the .png so that pos represents the center
 	// (Note the y axis for screen coords points downward, hence subtractions!!!!)
-	square.x = static_cast<int>(screenCoords.x - 0.5f * w);
-	square.y = static_cast<int>(screenCoords.y - 0.5f * h);
 	square.w = static_cast<int>(w*scale);
 	square.h = static_cast<int>(h*scale);
+	square.x = static_cast<int>(screenCoords.x - 0.5f * square.w);
+	square.y = static_cast<int>(screenCoords.y - 0.5f * square.h);
 
 	float orientation = myNPC->getOrientation();
 	// Convert character orientation from radians to degrees.

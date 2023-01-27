@@ -6,8 +6,12 @@ void StaticBody::Update(float deltaTime, KinematicSteeringOutput* steering)
 	Body::Update(deltaTime);
 	newOrientation();
 
+
+	// If there is no steering, set vel and rotation to null
 	if (steering == NULL)
 	{
+		vel = Vec3();
+		rotation = 0.0f;
 		return;
 	}
 	//steering

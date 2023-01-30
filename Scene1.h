@@ -7,6 +7,7 @@
 #include "StaticBody.h"
 #include "KinematicSeek.h"
 #include "KinematicArrive.h"
+#include "KinematicWander.h"
 
 
 using namespace MATH;

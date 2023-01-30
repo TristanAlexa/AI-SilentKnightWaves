@@ -8,8 +8,7 @@
 
 using namespace MATH;
 
-class KinematicArrive
-{
+class KinematicArrive {
 private:
 	KinematicSteeringOutput* result;
 	Body* character;

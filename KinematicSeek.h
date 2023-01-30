@@ -8,8 +8,7 @@
 
 using namespace MATH;
 
-class KinematicSeek
-{
+class KinematicSeek {
 private:
 	KinematicSteeringOutput* result;
 	Body* character;

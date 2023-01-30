@@ -2,7 +2,10 @@
 #define STATIC_BODY_H
 #include "Body.h"
 #include "KinematicSteeringOutput.h"
-
+/*
+	StaticBody AI's movement use its relative pos and orientation to a target to 
+	output a velocity towards the target
+*/
 class StaticBody : public Body {
 private:
 

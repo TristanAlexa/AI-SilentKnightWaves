@@ -1,9 +1,11 @@
 #ifndef KINEMATIC_BODY_H
 #define KINEMATIC_BODY_H
-
 #include "Body.h"
 #include "SteeringOutput.h"
-
+/*
+    Kinematic bodies move more realistically by accelerating and decelerating to the targets position 
+	by keeping track of the body's velocity
+*/
 class KinematicBody : public Body  {
 protected:
 

@@ -1,6 +1,8 @@
 #include "Scene1.h"
 #include "VMath.h"
-
+/*
+	In class demo code
+*/
 
 Scene1::Scene1(SDL_Window* sdlWindow_, GameManager* game_){
 	window = sdlWindow_;
@@ -9,10 +11,11 @@ Scene1::Scene1(SDL_Window* sdlWindow_, GameManager* game_){
 	xAxis = 25.0f;
 	yAxis = 15.0f;
 
-	// create a NPC
+	// create a staticbody NPC
 	myNPC = nullptr;
+
+	// creates a character using a dynamic body
 	blinky = nullptr;
-	
 }
 
 Scene1::~Scene1(){
@@ -100,21 +103,26 @@ void Scene1::Update(const float deltaTime) {
 	steering = NULL;
 
 	/// create KinematicSeek
-	KinematicSeek* steeringAlgorithm;
-	
+	/*KinematicSeek* steeringAlgorithm;
 	steeringAlgorithm = new KinematicSeek(myNPC, player);
-	steering = steeringAlgorithm->getSteering();
+	steering = steeringAlgorithm->getSteering();*/
 
 	/// create Kinematic arrive
-	//KinematicArrive* steeringAlgorithm;
-	//steeringAlgorithm = new KinematicArrive(myNPC, player);
-	//steering = steeringAlgorithm->getSteering();
-	//calculate KinematicSteeringOutput
+	KinematicArrive* steeringAlgorithm;
+	steeringAlgorithm = new KinematicArrive(myNPC, player);
+	steering = steeringAlgorithm->getSteering();
+	
+
+	/// Creating Kinematic Wander 
+	/*KinematicWander* steeringAlgorithm;
+	steeringAlgorithm = new KinematicWander(myNPC);
+	steering = steeringAlgorithm->getSteering();*/
 
 
 	/// Update player and characters
-	//myNPC->Update(deltaTime, steering);
-	blinky->Update(deltaTime);
+	myNPC->Update(deltaTime, steering);   // orange ghost using kinematic seek-> moves towards player and spins in place under player
+										  // orange ghost using kinematic arrive-> stops at the corner of the player img
+	blinky->Update(deltaTime);            // red ghost using dynamic seek to slow down and ocilates around player
 	game->getPlayer()->Update(deltaTime);
 
 	/// Memory clean up
@@ -153,8 +161,8 @@ void Scene1::Render() {
 	float orientationDegrees = orientation * 180.0f / M_PI;
 
 	// Render the NPC
-	//SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
-    //     orientationDegrees, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
+         orientationDegrees, nullptr, SDL_FLIP_NONE);
 
 	
 	blinky->render(0.15f);

@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "KinematicBody.h"
 #include "Seek.h"
+#include "Flee.h"
 
 using namespace std;
 

@@ -161,8 +161,8 @@ void Scene1::Render() {
 	float orientationDegrees = orientation * 180.0f / M_PI;
 
 	// Render the NPC
-	SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
-         orientationDegrees, nullptr, SDL_FLIP_NONE);
+	//SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
+         //orientationDegrees, nullptr, SDL_FLIP_NONE);
 
 	
 	blinky->render(0.15f);

@@ -3,6 +3,7 @@
 #include "Vector.h"
 #include "VMath.h"
 #include "Body.h"
+#include <time.h>
 #include "KinematicSteeringOutput.h"
 using namespace MATH;
 
@@ -21,7 +22,7 @@ public:
 	// Returns a float from -1.0 to 1.0
 	float RandomBinomial();
 	// Returns a float from 0.0 - 1.0  
-	float Random(); //!!!!!!!!!!!!!!!!!!NOT COMPLETE!!!!!!!!!!
+	float Random(); 
 
 };
 #endif;

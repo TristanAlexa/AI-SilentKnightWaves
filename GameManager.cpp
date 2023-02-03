@@ -19,6 +19,9 @@ bool GameManager::OnCreate() {
     const int SCREEN_WIDTH = 1000;
     const int SCREEN_HEIGHT = 600;
 
+    // Setting the timer seed
+    srand((unsigned)time(NULL));
+
     windowPtr = new Window(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (windowPtr == nullptr) {
 		OnDestroy();

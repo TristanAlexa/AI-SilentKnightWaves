@@ -108,15 +108,15 @@ void Scene1::Update(const float deltaTime) {
 	steering = steeringAlgorithm->getSteering();*/
 
 	/// create Kinematic arrive
-	KinematicArrive* steeringAlgorithm;
+	/*KinematicArrive* steeringAlgorithm;
 	steeringAlgorithm = new KinematicArrive(myNPC, player);
-	steering = steeringAlgorithm->getSteering();
+	steering = steeringAlgorithm->getSteering();*/
 	
 
 	/// Creating Kinematic Wander 
-	/*KinematicWander* steeringAlgorithm;
+	KinematicWander* steeringAlgorithm;
 	steeringAlgorithm = new KinematicWander(myNPC);
-	steering = steeringAlgorithm->getSteering();*/
+	steering = steeringAlgorithm->getSteering();
 
 
 	/// Update player and characters
@@ -161,8 +161,8 @@ void Scene1::Render() {
 	float orientationDegrees = orientation * 180.0f / M_PI;
 
 	// Render the NPC
-	//SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
-         //orientationDegrees, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
+         orientationDegrees, nullptr, SDL_FLIP_NONE);
 
 	
 	blinky->render(0.15f);

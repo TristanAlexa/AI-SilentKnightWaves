@@ -85,7 +85,7 @@ void Character::SteerToSeekPlayer(SteeringOutput* steering)
 
 	// using the target, calculate and set values in the overall steering output
 	SteeringBehaviour* steering_algorithm = new Seek(body, target); //dynamic steering algo's should derive from the base steeringBehaviour class
-	//SteeringBehaviour* steering_algorithm = new Flee(body, target);
+	//SteeringBehaviour* steering_algorithm = new Flee(body, target); //should be in its own helper function
 
 	steering_outputs.push_back(steering_algorithm->getSteering());
 

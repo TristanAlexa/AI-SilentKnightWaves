@@ -1,4 +1,4 @@
-#include "StaticBody.h"
+#include "StaticBody.h" 
 
 void StaticBody::Update(float deltaTime, KinematicSteeringOutput* steering)
 {
@@ -14,11 +14,11 @@ void StaticBody::Update(float deltaTime, KinematicSteeringOutput* steering)
 		rotation = 0.0f;
 		return;
 	}
-	//steering
+	// steering
 	vel = steering->velocity;
 	rotation = steering->rotation;
 
-	//clip to maxValues
+	// clip to maxValues
 	if (VMath::mag(vel) > maxSpeed)
 	{
 		vel = VMath::normalize(vel) * maxSpeed;

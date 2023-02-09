@@ -55,7 +55,7 @@ bool Scene1::OnCreate() {
 	Vec3 acceleration = Vec3();*/
 	//float mass = 1.0f;
 	float orientation = 0.0f;
-	float maxSpeed = 2.0f;   //want to make max speed of ncp smaller than player
+	float maxSpeed = 5.0f;   //want to make max speed of ncp smaller than player
 	float maxRotation = 1.0f;
 	myNPC = new StaticBody(
 		position,

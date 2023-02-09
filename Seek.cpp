@@ -7,9 +7,7 @@ Seek::Seek(Body* character_, Body* target_)
 }
 
 Seek::~Seek()
-{
-
-}
+{}
 
 SteeringOutput* Seek::getSteering()
 {

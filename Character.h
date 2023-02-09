@@ -7,6 +7,7 @@
 #include "KinematicBody.h"
 #include "Seek.h"
 #include "Flee.h"
+#include "Arrive.h"
 
 using namespace std;
 

@@ -8,7 +8,6 @@
 #include <time.h>
 #include "PlayerBody.h"
 
-
 class GameManager {
 private:
 	/// These are called "forward declarations" The idea is that a pointer is 

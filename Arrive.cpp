@@ -4,10 +4,10 @@ Arrive::Arrive(Body* character_, Body* target_)
 {
 	character = character_;
 	target = target_;
-	maxAccel = 5.0f;
-	maxSpeed = 4.0f;
+	maxAccel = 3.0f;
+	maxSpeed = 2.0f;
 	slowRadius = 2.0f;
-	targetRadius = 3.0f;
+	targetRadius = 0.2f;
 }
 
 Arrive::~Arrive(){}
@@ -53,7 +53,5 @@ SteeringOutput* Arrive::getSteering()
 	}
 
 	result->angular = 0.0f;
-	return result;
-
 	return result;
 }

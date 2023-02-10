@@ -18,6 +18,8 @@ private:
 	class Scene* scene;
 
 	void SteerToSeekPlayer(SteeringOutput* steering);
+	void SteerToFleePlayer(SteeringOutput* steering);
+	void SteerToArriveToPlayer(SteeringOutput* steering);
 
 public:
 	Character()

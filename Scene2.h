@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "MMath.h"
+#include "Graph.h"
 using namespace MATH;
 class Scene2 : public Scene
 {
@@ -13,6 +14,9 @@ private:
 	SDL_Renderer* renderer;
 	Matrix4 projectionMatrix;
 	Matrix4     inverseProjection;
+
+	Graph* graph;
+	vector<Node*> sceneNodes;
 
 public:
 	Scene2(SDL_Window* sdlWindow, GameManager* game_);

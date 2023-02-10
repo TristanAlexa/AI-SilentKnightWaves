@@ -4,7 +4,7 @@ KinematicWander::KinematicWander(Body* character_)
 {
 	character = character_;
 	maxSpeed = 2.0f;
-	maxRotationSpeed = 0.0f;
+	maxRotationSpeed = 4.0f;
 	result = new KinematicSteeringOutput;
 }
 
@@ -23,20 +23,17 @@ KinematicSteeringOutput* KinematicWander::getSteering()
 	
 	// result.rotation = random# * maxRotationspeed;
 	result->rotation = RandomBinomial() * maxRotationSpeed;
-		//printf("%f\n", result->rotation);
 	return result;
 }
 
 float KinematicWander::RandomBinomial()
 {
 	float rb = Random() - Random();
-		//printf("This is the random binomial: ""%f\n", rb);
 	return rb;
 }
 
 float KinematicWander::Random()
 {
 	float randomFloat = (float) rand() / RAND_MAX;
-		//printf("%f\n", randomFloat );
 	return randomFloat;
 }

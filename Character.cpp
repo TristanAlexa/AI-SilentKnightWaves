@@ -7,7 +7,8 @@ bool Character::OnCreate(Scene* scene_)
 	// Configure and instantiate the body to use for the demo
 	if (!body)
 	{
-		float radius = 0.2;
+		//float radius = 0.2;
+		float radius = 0.0;
 		float orientation = 0.0f;
 		float rotation = 0.0f;
 		float angular = 0.0f;
@@ -62,7 +63,9 @@ void Character::Update(float deltaTime)
 	SteeringOutput* steering;
 	steering = new SteeringOutput();
 
-	SteerToSeekPlayer(steering);
+	//SteerToSeekPlayer(steering);
+	//SteerToFleePlayer(steering);
+	SteerToArriveToPlayer(steering);
 
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);
@@ -84,9 +87,69 @@ void Character::SteerToSeekPlayer(SteeringOutput* steering)
 	PlayerBody* target = scene->game->getPlayer();
 
 	// using the target, calculate and set values in the overall steering output
-	//SteeringBehaviour* steering_algorithm = new Seek(body, target); //dynamic steering algo's should derive from the base steeringBehaviour class
-	//SteeringBehaviour* steering_algorithm = new Flee(body, target); //should be in its own helper function
-	SteeringBehaviour* steering_algorithm = new Arrive(body, target);
+	SteeringBehaviour* steering_algorithm = new Seek(body, target); //dynamic steering algo's should derive from the base steeringBehaviour class
+	
+	//SteeringBehaviour* steering_algorithm = new Arrive(body, target); // shoudl be in its own helper function
+
+	steering_outputs.push_back(steering_algorithm->getSteering());
+
+	// add in some other algorithms
+
+	// Add together steering outputs
+	for (int i = 0; i < steering_outputs.size(); i++)
+	{
+		if (steering_outputs[i])
+		{
+			*steering += *steering_outputs[i];
+		}
+	}
+
+	// clean up memory
+	// (delete only those objects created in this function)
+	if (steering_algorithm)
+	{
+		delete steering_algorithm;
+	}
+}
+
+void Character::SteerToFleePlayer(SteeringOutput* steering)
+{
+	vector<SteeringOutput*> steering_outputs;
+
+	PlayerBody* target = scene->game->getPlayer();
+
+	// using the target, calculate and set values in the overall steering output
+	SteeringBehaviour* steering_algorithm = new Flee(body, target); 
+
+	steering_outputs.push_back(steering_algorithm->getSteering());
+
+	// add in some other algorithms
+
+	// Add together steering outputs
+	for (int i = 0; i < steering_outputs.size(); i++)
+	{
+		if (steering_outputs[i])
+		{
+			*steering += *steering_outputs[i];
+		}
+	}
+
+	if (steering_algorithm)
+	{
+		delete steering_algorithm;
+	}
+}
+
+void Character::SteerToArriveToPlayer(SteeringOutput* steering)
+{
+	vector<SteeringOutput*> steering_outputs;
+
+	// set the target for steering; target is used by the steerTo... functions
+	// (often the target is the Player)
+	PlayerBody* target = scene->game->getPlayer();
+
+	// using the target, calculate and set values in the overall steering output
+	SteeringBehaviour* steering_algorithm = new Arrive(body, target); 
 
 	steering_outputs.push_back(steering_algorithm->getSteering());
 

@@ -56,7 +56,7 @@ bool Scene1::OnCreate() {
 	//float mass = 1.0f;
 	float orientation = 0.0f;
 	float maxSpeed = 5.0f;   //want to make max speed of ncp smaller than player
-	float maxRotation = 1.0f;
+	float maxRotation = 3.0f;
 	myNPC = new StaticBody(
 		position,
 		orientation,
@@ -101,17 +101,6 @@ void Scene1::Update(const float deltaTime) {
 	/// STEERING calculation
 	KinematicSteeringOutput* steering;
 	steering = NULL;
-
-	/// create KinematicSeek
-	/*KinematicSeek* steeringAlgorithm;
-	steeringAlgorithm = new KinematicSeek(myNPC, player);
-	steering = steeringAlgorithm->getSteering();*/
-
-	/// create Kinematic arrive
-	/*KinematicArrive* steeringAlgorithm;
-	steeringAlgorithm = new KinematicArrive(myNPC, player);
-	steering = steeringAlgorithm->getSteering();*/
-	
 
 	/// Creating Kinematic Wander 
 	KinematicWander* steeringAlgorithm;

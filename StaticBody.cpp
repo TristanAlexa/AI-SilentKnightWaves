@@ -4,7 +4,7 @@ void StaticBody::Update(float deltaTime, KinematicSteeringOutput* steering)
 {
 	//call the base class update, at the end or beginning
 	Body::Update(deltaTime);
-	newOrientation();
+	//newOrientation(); //change where this is called
 
 
 	// If there is no steering, set vel and rotation to null

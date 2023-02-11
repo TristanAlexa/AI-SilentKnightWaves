@@ -7,8 +7,7 @@ bool Character::OnCreate(Scene* scene_)
 	// Configure and instantiate the body to use for the demo
 	if (!body)
 	{
-		//float radius = 0.2;
-		float radius = 0.0;
+		float radius = 0.2;
 		float orientation = 0.0f;
 		float rotation = 0.0f;
 		float angular = 0.0f;
@@ -63,9 +62,20 @@ void Character::Update(float deltaTime)
 	SteeringOutput* steering;
 	steering = new SteeringOutput();
 
-	//SteerToSeekPlayer(steering);
-	//SteerToFleePlayer(steering);
-	SteerToArriveToPlayer(steering);
+	// set up steering types for the new constructor
+	if (steerType == 1)
+	{
+		SteerToSeekPlayer(steering);
+	}
+	else if (steerType == 2)
+	{
+		SteerToFleePlayer(steering);
+	}
+	else if (steerType == 3)
+	{
+		SteerToArriveToPlayer(steering);
+	}
+	
 
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);

@@ -24,6 +24,11 @@ Scene1::~Scene1(){
 		blinky->OnDestroy();
 		delete blinky;
 	}
+
+	if (myNPC)
+	{
+		delete myNPC;
+	}
 }
 
 bool Scene1::OnCreate() {
@@ -69,7 +74,7 @@ bool Scene1::OnCreate() {
 	SDL_FreeSurface(image);
 
 	
-	blinky = new Character();
+	blinky = new Character(3);
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png") )
 	{
 		return false;

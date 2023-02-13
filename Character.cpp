@@ -76,7 +76,6 @@ void Character::Update(float deltaTime)
 		SteerToArriveToPlayer(steering);
 	}
 	
-
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);
 
@@ -187,7 +186,7 @@ void Character::HandleEvents(const SDL_Event& event)
 	// handle events here, if needed
 }
 
-void Character::render(float scale)
+void Character::Render(float scale)
 {
 	SDL_Renderer* renderer = scene->game->getRenderer();
 	Matrix4 projectionMatrix = scene->getProjectionMatrix();

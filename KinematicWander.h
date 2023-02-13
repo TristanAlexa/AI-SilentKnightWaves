@@ -7,6 +7,8 @@
 #include "KinematicSteeringOutput.h"
 using namespace MATH;
 
+// Random wander used on the simplest AI characters
+// This is so that AI enemies have a range of difficulty, and not all are targeting the destoryable game object (tower)
 class KinematicWander {
 private:
 	KinematicSteeringOutput* result;
@@ -19,10 +21,8 @@ public:
 	~KinematicWander();
 	KinematicSteeringOutput* getSteering();
 
-	// Returns a float from -1.0 to 1.0
-	float RandomBinomial();
-	// Returns a float from 0.0 - 1.0  
-	float Random(); 
+	float RandomBinomial(); // Returns a float from -1.0 to 1.0
+	float Random();         // Returns a float from 0.0 - 1.0  
 
 };
 #endif;

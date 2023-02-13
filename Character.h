@@ -43,7 +43,7 @@ public:
 	bool setTextureWidth(string file);
 	void Update(float time);
 	void HandleEvents(const SDL_Event& event);
-	void render(float scale = 1.0f);
+	void Render(float scale = 1.0f);
 
 };
 

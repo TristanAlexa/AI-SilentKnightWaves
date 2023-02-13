@@ -52,8 +52,17 @@ void PlayerBody::Render( float scale )
     // Convert character orientation from radians to degrees.
     float orientationDegrees = orientation * 180.0f / M_PI ;
 
-    SDL_RenderCopyEx( renderer, texture, nullptr, &square,
-        orientationDegrees, nullptr, SDL_FLIP_NONE );
+    // Flip player according to velocity
+    if (game->getPlayer()->getVel().x >= 0)
+    {
+        SDL_RenderCopyEx(renderer, texture, nullptr, &square,
+            orientationDegrees, nullptr, SDL_FLIP_NONE);
+    }
+    else {
+        SDL_RenderCopyEx(renderer, texture, nullptr, &square,
+            orientationDegrees, nullptr, SDL_FLIP_HORIZONTAL);
+    }
+    
 }
 
 void PlayerBody::HandleEvents( const SDL_Event& event )

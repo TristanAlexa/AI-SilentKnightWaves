@@ -158,10 +158,7 @@ void Scene1::Render() {
 	SDL_RenderCopyEx(renderer, myNPC->getTexture(), nullptr, &square,
          orientationDegrees, nullptr, SDL_FLIP_NONE);
 
-	
-	blinky->render(0.15f);
-
-	// render the player
+	blinky->Render(0.15f);
 	game->RenderPlayer(0.10f);
 
 	SDL_RenderPresent(renderer);

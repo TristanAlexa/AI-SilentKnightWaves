@@ -3,8 +3,8 @@
 KinematicWander::KinematicWander(Body* character_)
 {
 	character = character_;
-	maxSpeed = 2.0f;
-	maxRotationSpeed = 4.0f;
+	maxSpeed = 2.5f;
+	maxRotationSpeed = 3.5f;
 	result = new KinematicSteeringOutput;
 }
 
@@ -18,10 +18,7 @@ KinematicWander::~KinematicWander()
 
 KinematicSteeringOutput* KinematicWander::getSteering()
 {
-	// result.vel = maxSpeed * character.orientation.asVec3()
 	result->velocity = maxSpeed * Vec3(cos(character->getOrientation()), sin(character->getOrientation()), 0.0f);
-	
-	// result.rotation = random# * maxRotationspeed;
 	result->rotation = RandomBinomial() * maxRotationSpeed;
 	return result;
 }

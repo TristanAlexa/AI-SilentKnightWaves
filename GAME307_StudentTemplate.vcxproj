@@ -145,6 +145,7 @@
     <ClCompile Include="KinematicSteeringOutput.cpp" />
     <ClCompile Include="KinematicWander.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainGameScene.cpp" />
     <ClCompile Include="MMath.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ObstacleAvoidance.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="KinematicSeek.h" />
     <ClInclude Include="KinematicSteeringOutput.h" />
     <ClInclude Include="KinematicWander.h" />
+    <ClInclude Include="MainGameScene.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MMath.h" />
     <ClInclude Include="Node.h" />

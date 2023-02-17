@@ -67,7 +67,74 @@ vector<int> Graph::neighbours(int fromNode)
 	return result;
 }
 
+// It will be useful for the A* pathfinding algorithm.
+struct NodeAndPriority
+{
+public:
+
+	// member variables
+	Node* node;
+	float priority;
+
+	// constructors
+	// We'll use the "universal" constructor when needed.
+	// See: https://learn.microsoft.com/en-us/cpp/cpp/initializing-classes-and-structs-without-constructors-cpp?view=msvc-170
+};
+
+// create struct with one operation, for use in the comparisons needed by the priority queue
+struct ComparePriority
+{
+	bool operator()(NodeAndPriority const& lhs, NodeAndPriority const& rhs)
+	{
+		// make it a min queue: lowest value of priority at top of the queue
+		return lhs.priority > rhs.priority;
+	}
+};
+
 vector<int> Graph::Dijkstra(int start, int goal)
 {
-	return {};
+	float new_cost;
+	float priority;
+	Node* current = node[start];
+
+	// Set up priority queue
+	priority_queue < NodeAndPriority, deque<NodeAndPriority>, ComparePriority> frontier;
+	frontier.push(NodeAndPriority {current, 0.0f});
+
+	// tracking solution path
+	// Node with label 5 ====> Node[5]: intergers are the labels of the node
+	vector<int> came_from;
+	came_from.resize(numNodes());
+
+	// cost so far storage
+	map<int, float> cost_so_far;  // a dictionary that matches the node label to a float
+	cost_so_far[start] = 0.0f;
+
+	// implement the algorithm
+
+	// loop through the frontier, while not empty
+	while (!frontier.empty())
+	{
+		// get the top node, from frontier and pop it off
+
+		//if its the goal then break out of the loop
+
+		// for the neighbours of current node
+		{
+			// calculate the new cost
+
+			//if next is not an index in cost_so_far, or new cost is lower
+
+			{
+				// found a better path, so update data structures
+			}
+		}
+	}
+
+	// follow the breadcrumbs in came_from to produce path
+	vector<int> path = {};
+
+	// do something
+	
+	return path;
 }

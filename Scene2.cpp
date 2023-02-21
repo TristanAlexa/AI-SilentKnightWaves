@@ -20,11 +20,9 @@ bool Scene2::OnCreate()
 	sceneNodes.resize(count);
 
 	// create some nodes
-	// TODO delete them later!!
 	for (int i = 0; i < count; i++)
 	{
 		sceneNodes[i] = new Node(i);
-
 	}
 
 	// create the graph
@@ -56,7 +54,7 @@ bool Scene2::OnCreate()
 	graph->addWeightConnection(2, 0, 1.0f);
 	graph->addWeightConnection(2, 1, 1.0f);
 	graph->addWeightConnection(2, 3, 1.0f);
-	graph->addWeightConnection(2, 04, 1.0f);
+	graph->addWeightConnection(2, 4, 1.0f);
 
 	// connections from 3
 	graph->addWeightConnection(3, 2, 1.0f);
@@ -73,14 +71,37 @@ bool Scene2::OnCreate()
 		cout << "node " << nodeLabel << endl;
 	}
 
-	//call dijksra
+	// Call dijksra to find shortest path
 	vector<int> path = graph->Dijkstra(0, 4);
+
+	// Print the node labels of the shortest path
+	if (path.empty())
+	{
+		cout << "No path found." << endl;
+	}
+	else
+	{
+		cout << "Shortest path: ";
+		for (int i = 0; i < path.size(); i++)
+		{
+			cout << path[i];
+			if (i < path.size() - 1)
+			{
+				cout << " -> ";
+			}
+		}
+		cout << endl;
+	}
 	return true;
 }
 
 void Scene2::OnDestroy()
 {
-	//memory clean up
+	// Clean up all the sceneNodes created
+	for (int i = 0; i < sceneNodes.size(); i++)
+	{
+		delete sceneNodes[i];
+	}
 }
 
 void Scene2::Update(const float time){}

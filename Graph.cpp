@@ -39,7 +39,8 @@ bool Graph::OnCreate(vector<Node*> nodes_)
 
 Graph::~Graph()
 {
-	// Node instances are created (new) elsewhere, another class is responsible for the memory clean up
+	// Node instances are created (new) in the scene
+	// So do the memory clean up in the scene OnDestroy()
 }
 
 int Graph::numNodes()
@@ -91,6 +92,12 @@ struct ComparePriority
 	}
 };
 
+/*
+	loop through the neighbors of the current node
+	calculate the new cost of each neighbor
+	and add it to the frontier if it hasn't been visited before 
+	or if the new cost is less than the previous cost of that neighbor
+*/
 vector<int> Graph::Dijkstra(int start, int goal)
 {
 	float new_cost;
@@ -116,17 +123,30 @@ vector<int> Graph::Dijkstra(int start, int goal)
 	while (!frontier.empty())
 	{
 		// get the top node, from frontier and pop it off
+		current = frontier.top().node;
+		frontier.pop();
 
 		//if its the goal then break out of the loop
+		if (current->getLabel() == goal)
+		{
+			break;
+		}
 
 		// for the neighbours of current node
+		vector<int> neighbours = this->neighbours(current->getLabel());
+		for (int i = 0; i < neighbours.size(); i++)
 		{
+			int next = neighbours[i];
 			// calculate the new cost
-
+			new_cost = cost_so_far[current->getLabel()] + cost[current->getLabel()][next];
 			//if next is not an index in cost_so_far, or new cost is lower
-
+			if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
 			{
 				// found a better path, so update data structures
+				cost_so_far[next] = new_cost;
+				priority = new_cost;
+				frontier.push(NodeAndPriority{ node[next], priority });
+				came_from[next] = current->getLabel();
 			}
 		}
 	}
@@ -134,7 +154,16 @@ vector<int> Graph::Dijkstra(int start, int goal)
 	// follow the breadcrumbs in came_from to produce path
 	vector<int> path = {};
 
-	// do something
+	if (came_from[goal] != 0)
+	{
+		int current = goal;
+		while (current != start)
+		{
+			path.insert(path.begin(), current);
+			current = came_from[current];
+		}
+		path.insert(path.begin(), start);
+	}
 	
 	return path;
 }

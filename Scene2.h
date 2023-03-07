@@ -19,6 +19,7 @@ private:
 	Graph* graph;
 	vector<Node*> sceneNodes;
 	Tile* singleTile;
+	float tileWidth, tileHeight;
 
 	void createTiles();
 

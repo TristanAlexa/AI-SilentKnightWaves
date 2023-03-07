@@ -9,17 +9,26 @@ Scene2::Scene2(SDL_Window* sdlWindow_, GameManager* game_)
 	yAxis = 15.0f;
 	graph = NULL;
 	singleTile = NULL;
-}
-
-void Scene2::createTiles()
-{
-	Vec3 tilePos = Vec3(15.0f, 5.0f, 5.0f);
-	singleTile = new Tile(tilePos, 2.0f, 1.5f, this);
+	tileWidth = 0.0f;
+	tileHeight = 0.0f;
 }
 
 Scene2::~Scene2()
 {
 	// memory clean ups
+	if (graph)
+	{
+		delete graph;
+	}
+	if (singleTile)
+	{
+		delete singleTile;
+	}
+}
+void Scene2::createTiles()
+{
+	Vec3 tilePos = Vec3(15.0f, 5.0f, 5.0f);
+	singleTile = new Tile(tilePos, tileWidth, tileHeight, this);
 }
 
 bool Scene2::OnCreate()
@@ -87,6 +96,8 @@ bool Scene2::OnCreate()
 	}
 
 	// create tiles
+	tileWidth = 1.85f;
+	tileHeight = 1.85f;
 	createTiles();
 
 	// Call dijksra to find shortest path
@@ -122,7 +133,7 @@ void Scene2::OnDestroy()
 	}
 }
 
-void Scene2::Update(const float time){}
+void Scene2::Update(const float time) {}
 
 void Scene2::Render()
 {
@@ -137,4 +148,4 @@ void Scene2::Render()
 	SDL_RenderPresent(renderer);
 }
 
-void Scene2::HandleEvents(const SDL_Event& event){}
+void Scene2::HandleEvents(const SDL_Event& event) {}

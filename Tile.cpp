@@ -1,7 +1,8 @@
 #include "Tile.h"
 
-Tile::Tile(float width_, float height_, Scene* scene_)
+Tile::Tile(Vec3 pos_, float width_, float height_, Scene* scene_)
 {
+	pos = pos_;
 	width = width_;
 	height = height_;
 	r = 255;
@@ -23,9 +24,6 @@ void Tile::Render()
 	Vec3 topLeftScreenCoords;
 	Vec3 bottomRightScreenCoords;
 
-	// eveneutally want the position of the tiles from the node. but for now hardcoding the tiles center position
-	Vec3 pos = Vec3(8.0f, 5.5f, 0.0f);
-
 	// extend from the center of tile to create the topLeft and bottomRight positions
 	topLeft = Vec3(pos.x - 0.5f * width, pos.y + 0.5f * height, 0.0f);
 	bottomRight = Vec3(pos.x + 0.5f * width, pos.y - 0.5f * height, 0.0f);
@@ -45,6 +43,7 @@ void Tile::Render()
 	SDL_RenderFillRect(renderer, &rect);
 
 	// draw border around tile
-	setRGBA(255, 255, 255, 0);
+	setRGBA(255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	SDL_RenderDrawRect(renderer, &rect);
 }

@@ -7,11 +7,14 @@ Scene2::Scene2(SDL_Window* sdlWindow_, GameManager* game_)
 	renderer = SDL_GetRenderer(window);
 	xAxis = 25.0f;
 	yAxis = 15.0f;
+	graph = NULL;
+	singleTile = NULL;
 }
 
 void Scene2::createTiles()
 {
-	singleTile = new Tile(2.0f, 2.0f, this);
+	Vec3 tilePos = Vec3(15.0f, 5.0f, 5.0f);
+	singleTile = new Tile(tilePos, 2.0f, 1.5f, this);
 }
 
 Scene2::~Scene2()

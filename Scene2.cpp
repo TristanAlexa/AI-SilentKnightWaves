@@ -9,6 +9,11 @@ Scene2::Scene2(SDL_Window* sdlWindow_, GameManager* game_)
 	yAxis = 15.0f;
 }
 
+void Scene2::createTiles()
+{
+	singleTile = new Tile(2.0f, 2.0f, this);
+}
+
 Scene2::~Scene2()
 {
 	// memory clean ups
@@ -16,6 +21,13 @@ Scene2::~Scene2()
 
 bool Scene2::OnCreate()
 {
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+
+	Matrix4 ndc = MMath::viewportNDC(w, h);
+	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
+	projectionMatrix = ndc * ortho;
+
 	int count = 5;
 	sceneNodes.resize(count);
 
@@ -65,11 +77,14 @@ bool Scene2::OnCreate()
 	cout << "Scene 2" << endl;
 
 	int currNode = 1;
-	cout << "neighbours of " << currNode << endl;
+	cout << "neighbours of node(" << currNode << ") are: ";
 	for (auto nodeLabel : graph->neighbours(currNode))
 	{
-		cout << "node " << nodeLabel << endl;
+		cout << "node (" << nodeLabel << ")" << endl;
 	}
+
+	// create tiles
+	createTiles();
 
 	// Call dijksra to find shortest path
 	vector<int> path = graph->Dijkstra(0, 4);
@@ -81,7 +96,7 @@ bool Scene2::OnCreate()
 	}
 	else
 	{
-		cout << "Shortest path: ";
+		cout << "Shortest path:";
 		for (int i = 0; i < path.size(); i++)
 		{
 			cout << path[i];
@@ -106,6 +121,17 @@ void Scene2::OnDestroy()
 
 void Scene2::Update(const float time){}
 
-void Scene2::Render(){}
+void Scene2::Render()
+{
+	// clear the screen
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+	SDL_RenderClear(renderer);
+
+	// render the tiles
+	singleTile->Render();
+
+	// end of render call
+	SDL_RenderPresent(renderer);
+}
 
 void Scene2::HandleEvents(const SDL_Event& event){}

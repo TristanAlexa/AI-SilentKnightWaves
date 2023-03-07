@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "MMath.h"
 #include "Graph.h"
+#include "Tile.h"
 using namespace MATH;
 class Scene2 : public Scene
 {
@@ -17,6 +18,9 @@ private:
 
 	Graph* graph;
 	vector<Node*> sceneNodes;
+	Tile* singleTile;
+
+	void createTiles();
 
 public:
 	Scene2(SDL_Window* sdlWindow, GameManager* game_);

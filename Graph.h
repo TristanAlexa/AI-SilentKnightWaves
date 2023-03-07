@@ -18,7 +18,8 @@ private:
 
 	// A 2D matrix of the connection costs // (not efficient)
 	// indexed by ints the node label
-	vector < vector< float > >cost;
+	// In a 10x10 tile grid, there will be 100by100 connections
+	vector< vector<float> >cost;
 
 public:
 	Graph(); //not the map

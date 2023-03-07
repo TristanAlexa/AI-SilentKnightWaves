@@ -28,7 +28,12 @@ Scene2::~Scene2()
 void Scene2::createTiles()
 {
 	Vec3 tilePos = Vec3(15.0f, 5.0f, 5.0f);
-	singleTile = new Tile(tilePos, tileWidth, tileHeight, this);
+	// create a random node
+	Node* n = new Node(8);
+	// want the tile to know what node its constructing
+	singleTile = new Tile(n, tilePos, tileWidth, tileHeight, this);
+
+	cout << "Node label for tile: " << singleTile->getNode()->getLabel() << endl;
 }
 
 bool Scene2::OnCreate()

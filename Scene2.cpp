@@ -8,7 +8,6 @@ Scene2::Scene2(SDL_Window* sdlWindow_, GameManager* game_)
 	xAxis = 25.0f;
 	yAxis = 15.0f;
 	graph = NULL;
-	singleTile = NULL;
 	tileWidth = 0.0f;
 	tileHeight = 0.0f;
 }
@@ -20,20 +19,54 @@ Scene2::~Scene2()
 	{
 		delete graph;
 	}
-	if (singleTile)
+	// Loop through the rows of the 2D matrix
+	for (int i = 0; i < tiles.size(); i++)
 	{
-		delete singleTile;
+		// Loop through the columns of the current row
+		for (int j = 0; j < tiles[i].size(); j++)
+		{
+			// Delete the tile at the current position
+			delete tiles[i][j];
+		}
+		tiles[i].clear();
 	}
+	tiles.clear();
 }
-void Scene2::createTiles()
-{
-	Vec3 tilePos = Vec3(15.0f, 5.0f, 5.0f);
-	// create a random node
-	Node* n = new Node(8);
-	// want the tile to know what node its constructing
-	singleTile = new Tile(n, tilePos, tileWidth, tileHeight, this);
 
-	cout << "Node label for tile: " << singleTile->getNode()->getLabel() << endl;
+/* Resizes the matrix to have a specified number of rowsand coloums
+   Create a new node for each row and coloumn and set its position at half the size of the current tiles width and height values
+   Create a new tile object and store it at the current row and column node position using tiles[i][j] */
+void Scene2::createTiles(int rows_, int cols_)
+{
+	tiles.resize(rows_);
+	for (int i = 0; i < rows_; i++)
+	{
+		tiles[i].resize(cols_);
+	}
+
+	Node* n;
+	Tile* t;
+	int i, j, label;
+
+	i = 0; //rows
+	j = 0; //coloumns
+	label = 0; // grid tile number
+
+	for (float y = 0.5f * tileHeight; y < yAxis; y += tileHeight)
+	{
+		for (float x = 0.5f * tileWidth; x < xAxis; x += tileWidth)
+		{
+			//create tiles and nodes
+			n = new Node(label);
+			Vec3 tilePos = Vec3(x, y, 0);
+			t = new Tile(n, tilePos, tileWidth, tileHeight, this);
+			tiles[i][j] = t;
+			j++;
+			label++;
+		}
+		j = 0;
+		i++;
+	}
 }
 
 bool Scene2::OnCreate()
@@ -100,10 +133,12 @@ bool Scene2::OnCreate()
 		cout << "node (" << nodeLabel << ")" << endl;
 	}
 
-	// create tiles
-	tileWidth = 1.85f;
-	tileHeight = 1.85f;
-	createTiles();
+	// setup and create tiles
+	tileWidth = 1.8f;
+	tileHeight = 1.7f;
+	int cols = ceil((xAxis - 0.5f * tileWidth) / tileWidth);
+	int rows = ceil((yAxis - 0.5f * tileHeight) / tileHeight);
+	createTiles(rows, cols);
 
 	// Call dijksra to find shortest path
 	vector<int> path = graph->Dijkstra(0, 4);
@@ -131,12 +166,35 @@ bool Scene2::OnCreate()
 
 void Scene2::OnDestroy()
 {
-	// Clean up all the sceneNodes created
+	// Memory cleanups
+		// NODES
 	for (int i = 0; i < sceneNodes.size(); i++)
 	{
 		delete sceneNodes[i];
 	}
+
+		// GRAPH
+	if (graph)
+	{
+		delete graph;
+	}
+
+		// TILES
+	// Loop through the rows of the 2D matrix
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		// Loop through the columns of the current row
+		for (int j = 0; j < tiles[i].size(); j++)
+		{
+			// Delete the tile at the current position
+			delete tiles[i][j];
+		}
+		tiles[i].clear();
+	}
+	tiles.clear();
 }
+
+
 
 void Scene2::Update(const float time) {}
 
@@ -146,8 +204,14 @@ void Scene2::Render()
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 
-	// render the tiles
-	singleTile->Render();
+	// render all tiles
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		for (int j = 0; j < tiles[i].size(); j++)
+		{
+			tiles[i][j]->Render();
+		}
+	}
 
 	// end of render call
 	SDL_RenderPresent(renderer);

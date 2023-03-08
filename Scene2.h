@@ -18,10 +18,11 @@ private:
 
 	Graph* graph;
 	vector<Node*> sceneNodes;
-	Tile* singleTile;
-	float tileWidth, tileHeight;
 
-	void createTiles();
+	float tileWidth, tileHeight;
+	vector< vector <Tile*> > tiles; //2D matrix
+
+	void createTiles(int rows_, int cols_);
 
 public:
 	Scene2(SDL_Window* sdlWindow, GameManager* game_);

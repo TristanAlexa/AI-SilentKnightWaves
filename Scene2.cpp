@@ -60,7 +60,15 @@ void Scene2::createTiles(int rows_, int cols_)
 			n = new Node(label);
 			sceneNodes.push_back(n);
 			Vec3 tilePos = Vec3(x, y, 0);
-			t = new Tile(n, tilePos, tileWidth, tileHeight, this);
+			if (std::find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
+			{
+				
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
+			}
+			else
+			{
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false); //create regular tile
+			}
 			tiles[i][j] = t;
 			j++;
 			label++;
@@ -90,27 +98,44 @@ void Scene2::calculateConnectionWeights()
 			if (j > 0)
 			{
 				// Suppose each tile had a status that was either walkable or blocked
-				int to = tiles[i][j - 1]->getNode()->getLabel();
+				
 				// if "to" tile is walkbale then add the weight connection
-				graph->addWeightConnection(from, to, tileWidth); 
+				if (!tiles[i][j - 1]->isBlocked())
+				{
+					int to = tiles[i][j - 1]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileWidth);
+				}
+				 
 			}
 			// right: [i][j+1]
 			if (j < cols - 1)
 			{
-				int to = tiles[i][j + 1]->getNode()->getLabel();
-				graph->addWeightConnection(from, to, tileWidth); 
+				if (!tiles[i][j + 1]->isBlocked())
+				{
+					int to = tiles[i][j + 1]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileWidth);
+				}
+				
 			}
 			// above: [i+1][j]
 			if (i < rows - 1)
 			{
-				int to = tiles[i+1][j]->getNode()->getLabel();
-				graph->addWeightConnection(from, to, tileHeight); 
+				if (!tiles[i + 1][j]->isBlocked())
+				{
+					int to = tiles[i + 1][j]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileHeight);
+				}
+				
 			}
 			// below: [i-1[j]
 			if (i > 0)
 			{
-				int to = tiles[i - 1][j]->getNode()->getLabel();
-				graph->addWeightConnection(from, to, tileHeight);
+				if (!tiles[i - 1][j]->isBlocked())
+				{
+					int to = tiles[i - 1][j]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileHeight);
+				}
+				
 			}
 		}
 	}
@@ -144,7 +169,7 @@ bool Scene2::OnCreate()
 	calculateConnectionWeights();
 
 	// Call dijksra to find shortest path
-	vector<int> path = graph->Dijkstra(0, 2);
+	vector<int> path = graph->Dijkstra(0, 15);
 
 	// Print the node labels of the shortest path
 	if (path.empty())

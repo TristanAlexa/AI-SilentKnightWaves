@@ -25,6 +25,8 @@ private:
 	void createTiles(int rows_, int cols_);
 	void calculateConnectionWeights();
 
+	std::vector<int> blockedTiles = { 8,13,20 }; //tiles at these nodes will be blocked
+
 public:
 	Scene2(SDL_Window* sdlWindow, GameManager* game_);
 	~Scene2();

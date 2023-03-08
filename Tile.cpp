@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_)
+Tile::Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_, bool blockedTile_)
 {
 	node = node_;
 	pos = pos_;
@@ -11,6 +11,7 @@ Tile::Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_)
 	b = 255;
 	a = 0;
 	scene = scene_;
+	blockedTile = blockedTile_;
 }
 
 void Tile::Render()
@@ -45,6 +46,12 @@ void Tile::Render()
 	SDL_RenderFillRect(renderer, &rect);
 
 	// If blockable, render the tile in a different colour
+	if (blockedTile)
+	{
+		setRGBA(0, 0, 0, 0);
+		SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		SDL_RenderFillRect(renderer, &rect);
+	}
 
 	// draw border around tile
 	setRGBA(255, 255, 255, 255);

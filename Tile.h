@@ -15,6 +15,7 @@ private:
 
 	Node* node;
 	Vec3 pos;
+	bool blockedTile;
 
 	void setRGBA(Uint8 r_, Uint8 g_, Uint8 b_, Uint8 a_)
 	{
@@ -25,9 +26,11 @@ private:
 	}
 
 public:
-	Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_);
+	Tile(Node* node_, Vec3 pos_, float width_, float height_,Scene* scene_, bool blockedTile_);
 	~Tile() {};
 	void Render();
 	Node* getNode() { return node; }
+
+	bool isBlocked() const { return blockedTile; }
 };
 #endif;

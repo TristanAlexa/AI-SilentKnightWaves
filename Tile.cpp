@@ -39,9 +39,12 @@ void Tile::Render()
 	rect.h = static_cast<int>(bottomRightScreenCoords.y - topLeftScreenCoords.y);
 
 	// draw the tile with colour (you could use images and texutres if want)
+	// If walkable, render the tile as usual
 	setRGBA(17, 138, 178, 255);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	SDL_RenderFillRect(renderer, &rect);
+
+	// If blockable, render the tile in a different colour
 
 	// draw border around tile
 	setRGBA(255, 255, 255, 255);

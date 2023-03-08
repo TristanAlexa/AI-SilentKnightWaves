@@ -58,6 +58,7 @@ void Scene2::createTiles(int rows_, int cols_)
 		{
 			//create tiles and nodes
 			n = new Node(label);
+			sceneNodes.push_back(n);
 			Vec3 tilePos = Vec3(x, y, 0);
 			t = new Tile(n, tilePos, tileWidth, tileHeight, this);
 			tiles[i][j] = t;
@@ -66,6 +67,52 @@ void Scene2::createTiles(int rows_, int cols_)
 		}
 		j = 0;
 		i++;
+	}
+}
+
+void Scene2::calculateConnectionWeights()
+{
+	int rows = tiles.size();
+	int cols = tiles[0].size();
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			//[i+1][j-1]     [i+1][j]    [i+1][j+1]
+			// [i][j-1]       [i][j]     [i][j+1]
+			//[i-1][j-1]     [i-1[j]     [i-1][j+1]
+
+			Tile* fromTile = tiles[i][j];
+			int from = fromTile->getNode()->getLabel();
+
+			// left: [i][j-1]
+			if (j > 0)
+			{
+				// Suppose each tile had a status that was either walkable or blocked
+				int to = tiles[i][j - 1]->getNode()->getLabel();
+				// if "to" tile is walkbale then add the weight connection
+				graph->addWeightConnection(from, to, tileWidth); 
+			}
+			// right: [i][j+1]
+			if (j < cols - 1)
+			{
+				int to = tiles[i][j + 1]->getNode()->getLabel();
+				graph->addWeightConnection(from, to, tileWidth); 
+			}
+			// above: [i+1][j]
+			if (i < rows - 1)
+			{
+				int to = tiles[i+1][j]->getNode()->getLabel();
+				graph->addWeightConnection(from, to, tileHeight); 
+			}
+			// below: [i-1[j]
+			if (i > 0)
+			{
+				int to = tiles[i - 1][j]->getNode()->getLabel();
+				graph->addWeightConnection(from, to, tileHeight);
+			}
+		}
 	}
 }
 
@@ -78,70 +125,26 @@ bool Scene2::OnCreate()
 	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
 	projectionMatrix = ndc * ortho;
 
-	int count = 5;
-	sceneNodes.resize(count);
-
-	// create some nodes
-	for (int i = 0; i < count; i++)
-	{
-		sceneNodes[i] = new Node(i);
-	}
-
-	// create the graph
-	graph = new Graph();
-	if (!graph->OnCreate(sceneNodes))
-	{
-		// include error message
-		return false;
-	}
-
-	// set up graph and test it
-	//     0
-	//     |
-	// 1 - 2 - 3
-	//     |
-	//     4
-
-	// connections from 0
-	graph->addWeightConnection(
-		sceneNodes[0]->getLabel(),
-		sceneNodes[2]->getLabel(),
-		1.0f
-	);
-
-	//connections from 1
-	graph->addWeightConnection(1, 2, 1.0f);
-
-	//connections from 2
-	graph->addWeightConnection(2, 0, 1.0f);
-	graph->addWeightConnection(2, 1, 1.0f);
-	graph->addWeightConnection(2, 3, 1.0f);
-	graph->addWeightConnection(2, 4, 1.0f);
-
-	// connections from 3
-	graph->addWeightConnection(3, 2, 1.0f);
-
-	//connections from 4
-	graph->addWeightConnection(3, 2, 1.0f);
-
-	cout << "Scene 2" << endl;
-
-	int currNode = 1;
-	cout << "neighbours of node(" << currNode << ") are: ";
-	for (auto nodeLabel : graph->neighbours(currNode))
-	{
-		cout << "node (" << nodeLabel << ")" << endl;
-	}
-
 	// setup and create tiles
-	tileWidth = 1.8f;
-	tileHeight = 1.7f;
+	tileWidth = 4.2f;
+	tileHeight = 3.0f;
 	int cols = ceil((xAxis - 0.5f * tileWidth) / tileWidth);
 	int rows = ceil((yAxis - 0.5f * tileHeight) / tileHeight);
 	createTiles(rows, cols);
 
+	// create the graph and add the list of nodes to the graph
+	graph = new Graph();
+	graph->OnCreate(sceneNodes);
+	if (!graph->OnCreate(sceneNodes))
+	{
+		cerr << "Error creating nodes" << endl;
+		return false;
+	}
+	// create connections
+	calculateConnectionWeights();
+
 	// Call dijksra to find shortest path
-	vector<int> path = graph->Dijkstra(0, 4);
+	vector<int> path = graph->Dijkstra(0, 2);
 
 	// Print the node labels of the shortest path
 	if (path.empty())

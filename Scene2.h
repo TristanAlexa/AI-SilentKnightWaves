@@ -23,6 +23,7 @@ private:
 	vector< vector <Tile*> > tiles; //2D matrix
 
 	void createTiles(int rows_, int cols_);
+	void calculateConnectionWeights();
 
 public:
 	Scene2(SDL_Window* sdlWindow, GameManager* game_);

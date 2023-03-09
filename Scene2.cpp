@@ -10,11 +10,18 @@ Scene2::Scene2(SDL_Window* sdlWindow_, GameManager* game_)
 	graph = NULL;
 	tileWidth = 0.0f;
 	tileHeight = 0.0f;
+	blinky = nullptr;
 }
 
 Scene2::~Scene2()
 {
 	// memory clean ups
+	if (blinky)
+	{
+		blinky->OnDestroy();
+		delete blinky;
+	}
+
 	if (graph)
 	{
 		delete graph;
@@ -60,7 +67,7 @@ void Scene2::createTiles(int rows_, int cols_)
 			n = new Node(label);
 			sceneNodes.push_back(n);
 			Vec3 tilePos = Vec3(x, y, 0);
-			if (std::find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
+			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
 			{
 				
 				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
@@ -150,6 +157,16 @@ bool Scene2::OnCreate()
 	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
 	projectionMatrix = ndc * ortho;
 
+	// setup npcs
+	/// Turn on the SDL imaging subsystem
+	IMG_Init(IMG_INIT_PNG);
+
+	blinky = new Character(3);
+	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
+	{
+		return false;
+	}
+
 	// setup and create tiles
 	tileWidth = 4.2f;
 	tileHeight = 3.0f;
@@ -169,7 +186,7 @@ bool Scene2::OnCreate()
 	calculateConnectionWeights();
 
 	// Call dijksra to find shortest path
-	vector<int> path = graph->Dijkstra(0, 15);
+	path = graph->Dijkstra(0, 15);
 
 	// Print the node labels of the shortest path
 	if (path.empty())
@@ -189,25 +206,32 @@ bool Scene2::OnCreate()
 		}
 		cout << endl;
 	}
+
 	return true;
 }
 
 void Scene2::OnDestroy()
 {
-	// Memory cleanups
-		// NODES
+// Memory cleanups
+	// NPCs
+	if (blinky)
+	{
+		blinky->OnDestroy();
+		delete blinky;
+	}
+	// NODES
 	for (int i = 0; i < sceneNodes.size(); i++)
 	{
 		delete sceneNodes[i];
 	}
 
-		// GRAPH
+	// GRAPH
 	if (graph)
 	{
 		delete graph;
 	}
 
-		// TILES
+	// TILES
 	// Loop through the rows of the 2D matrix
 	for (int i = 0; i < tiles.size(); i++)
 	{
@@ -224,7 +248,11 @@ void Scene2::OnDestroy()
 
 
 
-void Scene2::Update(const float time) {}
+void Scene2::Update(const float time) 
+{
+	blinky->Update(time);
+
+}
 
 void Scene2::Render()
 {
@@ -241,6 +269,7 @@ void Scene2::Render()
 		}
 	}
 
+	blinky->Render(0.15);
 	// end of render call
 	SDL_RenderPresent(renderer);
 }

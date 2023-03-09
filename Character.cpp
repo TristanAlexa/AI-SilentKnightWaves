@@ -71,6 +71,7 @@ void Character::Update(float deltaTime)
 	{
 		SteerToFleePlayer(steering);
 	}
+	
 	else if (steerType == 3)
 	{
 		SteerToArriveToPlayer(steering);

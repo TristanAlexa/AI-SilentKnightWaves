@@ -8,6 +8,9 @@
 #include "Seek.h"
 #include "Flee.h"
 #include "Arrive.h"
+#include "FollowAPath.h"
+#include "Node.h"
+#include "Path.h"
 
 using namespace std;
 
@@ -16,10 +19,13 @@ class Character  //NPC
 private:
 	class KinematicBody* body;
 	class Scene* scene;
+	class Node* node;
+	class Path* path;
 
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
 	void SteerToArriveToPlayer(SteeringOutput* steering);
+	void SteerToFollowPath(SteeringOutput* steering);
 
 	int steerType;
 
@@ -31,6 +37,9 @@ public:
 		body = NULL;
 		scene = NULL;
 		steerType = steerType_;
+		node = NULL;
+		path = NULL;
+
 	};
 
 	~Character()

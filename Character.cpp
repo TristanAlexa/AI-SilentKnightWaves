@@ -76,6 +76,10 @@ void Character::Update(float deltaTime)
 	{
 		SteerToArriveToPlayer(steering);
 	}
+	else if (steerType == 4)
+	{
+		SteerToFollowPath(steering);
+	}
 	
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);
@@ -180,6 +184,33 @@ void Character::SteerToArriveToPlayer(SteeringOutput* steering)
 	{
 		delete steering_algorithm;
 	}
+}
+
+void Character::SteerToFollowPath(SteeringOutput* steering)
+{
+	/*vector<SteeringOutput*> steering_outputs;
+
+	Node* targetNode = path->getCurrentNode();
+	Path* pathToFollow = path;
+
+	SteeringBehaviour* steering_algorithm = new FollowAPath(body, targetNode, pathToFollow);
+	steering_outputs.push_back(steering_algorithm->getSteering());
+
+	// Add together steering outputs
+	for (int i = 0; i < steering_outputs.size(); i++)
+	{
+		if (steering_outputs[i])
+		{
+			*steering += *steering_outputs[i];
+		}
+	}
+
+	// clean up memory
+	// (delete only those objects created in this function)
+	if (steering_algorithm)
+	{
+		delete steering_algorithm;
+	}*/
 }
 
 void Character::HandleEvents(const SDL_Event& event)

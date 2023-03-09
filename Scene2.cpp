@@ -64,12 +64,17 @@ void Scene2::createTiles(int rows_, int cols_)
 		for (float x = 0.5f * tileWidth; x < xAxis; x += tileWidth)
 		{
 			//create tiles and nodes
-			n = new Node(label);
-			sceneNodes.push_back(n);
 			Vec3 tilePos = Vec3(x, y, 0);
+			n = new Node(label, tilePos);
+			sceneNodes.push_back(n);
+			
+			// Testing geting node position ================================================================================
+			Vec3 nodePos = n->getPosition();
+			cout << "Node Label-> (" << label << ") is at position: " << nodePos.x << "," << nodePos.y << endl;
+			// =============================================================================================================
+
 			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
 			{
-				
 				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
 			}
 			else
@@ -161,7 +166,7 @@ bool Scene2::OnCreate()
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
 
-	blinky = new Character(3);
+	blinky = new Character(4);
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
 	{
 		return false;
@@ -191,11 +196,11 @@ bool Scene2::OnCreate()
 	// Print the node labels of the shortest path
 	if (path.empty())
 	{
-		cout << "No path found." << endl;
+		cout << "No path found by Dijkstra." << endl;
 	}
 	else
 	{
-		cout << "Shortest path:";
+		cout << "Shortest path found by Dijkstra:";
 		for (int i = 0; i < path.size(); i++)
 		{
 			cout << path[i];

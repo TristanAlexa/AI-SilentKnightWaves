@@ -45,9 +45,10 @@ public:
 	Matrix4 getInverseMatrix() { return inverseProjection; }
 
 	// vector to store the path found by Dijkstra
-	vector<int> path;
+	vector<Node*> path;
 	// retrieve the shortest path from dijkstra
-	vector<int> getPath() const { return path; }
+	
+	//vector<int> getPath() const { return path; }
 };
 
 #endif;

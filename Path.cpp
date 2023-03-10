@@ -1,7 +1,8 @@
 #include "Path.h"
 
-Path::Path()
+Path::Path(vector<Node*> nodes_)
 {
+	nodes = nodes_;
 	currentNode = 0;
 }
 

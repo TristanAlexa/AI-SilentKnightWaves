@@ -19,7 +19,7 @@ class Character  //NPC
 private:
 	class KinematicBody* body;
 	class Scene* scene;
-	//class Path* path;
+	class Path* path;
 
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
@@ -28,15 +28,15 @@ private:
 
 	int steerType;
 
+	
 public:
 
 	// Construct char defining an int that selects a steering algorithm
-	Character(int steerType_, vector<int> path_)
+	Character(int steerType_)
 	{
 		body = NULL;
 		scene = NULL;
 		steerType = steerType_;
-		//path = path_;
 
 	};
 
@@ -52,6 +52,7 @@ public:
 	void HandleEvents(const SDL_Event& event);
 	void Render(float scale = 1.0f);
 
+	void setPath(Path* path_) { path = path_; }
 };
 
 #endif

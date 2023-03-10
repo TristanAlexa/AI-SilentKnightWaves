@@ -185,6 +185,7 @@ bool Scene2::OnCreate()
 	path = graph->Dijkstra(0, 15);
 
 	// Print the node labels of the shortest path
+	Path* p = new Path(path);
 	if (path.empty())
 	{
 		cout << "No path found by Dijkstra." << endl;
@@ -194,7 +195,7 @@ bool Scene2::OnCreate()
 		cout << "Shortest path found by Dijkstra:";
 		for (int i = 0; i < path.size(); i++)
 		{
-			cout << path[i];
+			cout << path[i]->getLabel();
 			if (i < path.size() - 1)
 			{
 				cout << " -> ";
@@ -207,11 +208,12 @@ bool Scene2::OnCreate()
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
 
-	blinky = new Character(4, path);
+	blinky = new Character(4);
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
 	{
 		return false;
 	}
+	blinky->setPath(p);
 
 	return true;
 }

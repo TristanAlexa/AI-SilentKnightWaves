@@ -35,7 +35,7 @@ public:
 
 	// Vector of ints which are the labels of the node pointers
 	vector<int> neighbours(int fromNode); 
-	vector<int> Dijkstra(int start, int goal);
+	vector<Node*> Dijkstra(int start, int goal);
 
 };
 #endif;

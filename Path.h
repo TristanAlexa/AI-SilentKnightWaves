@@ -15,7 +15,7 @@ private:
 	int currentNode = 0; 
 
 public:
-	Path();
+	Path(vector<Node*> nodes_);
 	~Path() {};
 
 	// incrememnts the currentNode while still in the valid list of nodes

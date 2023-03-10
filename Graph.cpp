@@ -98,7 +98,7 @@ struct ComparePriority
 	and add it to the frontier if it hasn't been visited before 
 	or if the new cost is less than the previous cost of that neighbor
 */
-vector<int> Graph::Dijkstra(int start, int goal)
+vector<Node*> Graph::Dijkstra(int start, int goal)
 {
 	float new_cost;
 	float priority;
@@ -152,17 +152,17 @@ vector<int> Graph::Dijkstra(int start, int goal)
 	}
 
 	// follow the breadcrumbs in came_from to produce path
-	vector<int> path = {};
+	vector<Node*> path = {};
 
 	if (came_from[goal] != 0)
 	{
 		int current = goal;
 		while (current != start)
 		{
-			path.insert(path.begin(), current);
+			path.insert(path.begin(), getNode(current));
 			current = came_from[current];
 		}
-		path.insert(path.begin(), start);
+		path.insert(path.begin(), getNode(start));
 	}
 	
 	return path;

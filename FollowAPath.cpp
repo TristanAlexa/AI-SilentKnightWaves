@@ -1,13 +1,13 @@
 #include "FollowAPath.h"
 
-FollowAPath::FollowAPath(Body* character_, Path* path_) : Arrive(character_,target), path(path_)
+FollowAPath::FollowAPath(Body* character_, Body* target_, Path* path_) : Arrive(character_,target_)
 {
-    path = path_;
+    path = new Path(nodesToFollow);
 }
 
 FollowAPath::~FollowAPath()
 {
-	delete path;
+    delete path;
 }
 
 SteeringOutput* FollowAPath::getSteering()

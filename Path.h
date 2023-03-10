@@ -12,7 +12,7 @@ private:
 	vector<Node*> nodes;
 
 	// tracks progress of character along path
-	int currentNode = 0; 
+	int currentNode = 0;
 
 public:
 	Path(vector<Node*> nodes_);
@@ -22,6 +22,6 @@ public:
 	void incrementCurrentNode();
 
 	// returns the x, y values of the node position created in the scene (the pos of the middle of each tile)
-	Vec3 getCurrentNodePos() { return nodes[currentNode]->getPosition(); } 
+	Vec3 getCurrentNodePos();
 };
 #endif;

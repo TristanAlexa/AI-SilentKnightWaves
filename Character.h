@@ -20,6 +20,7 @@ private:
 	class KinematicBody* body;
 	class Scene* scene;
 	class Path* path;
+	vector<Node*> nodes;
 
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
@@ -37,7 +38,7 @@ public:
 		body = NULL;
 		scene = NULL;
 		steerType = steerType_;
-
+		path = new Path(nodes);
 	};
 
 	~Character()
@@ -52,7 +53,9 @@ public:
 	void HandleEvents(const SDL_Event& event);
 	void Render(float scale = 1.0f);
 
+	
 	void setPath(Path* path_) { path = path_; }
+	
 };
 
 #endif

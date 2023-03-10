@@ -46,9 +46,6 @@ public:
 
 	// vector to store the path found by Dijkstra
 	vector<Node*> path;
-	// retrieve the shortest path from dijkstra
-	
-	//vector<int> getPath() const { return path; }
 };
 
 #endif;

@@ -68,10 +68,10 @@ void Scene2::createTiles(int rows_, int cols_)
 			n = new Node(label, tilePos);
 			sceneNodes.push_back(n);
 			
-			// Testing geting node position ================================================================================
+			// Testing getting node position
 			Vec3 nodePos = n->getPosition();
 			cout << "Node Label-> (" << label << ") is at position: " << nodePos.x << "," << nodePos.y << endl;
-			// =============================================================================================================
+			
 
 			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
 			{
@@ -181,11 +181,11 @@ bool Scene2::OnCreate()
 	// create connections
 	calculateConnectionWeights();
 
-	// Call dijksra to find shortest path
+	// Call dijksra to find shortest path and store the path in a Path obj
 	path = graph->Dijkstra(0, 15);
-
-	// Print the node labels of the shortest path
 	Path* p = new Path(path);
+
+	// If a path exists Print the node labels of the shortest path
 	if (path.empty())
 	{
 		cout << "No path found by Dijkstra." << endl;
@@ -213,6 +213,7 @@ bool Scene2::OnCreate()
 	{
 		return false;
 	}
+	// set the ai's path to the new path found by dijkstra
 	blinky->setPath(p);
 
 	return true;
@@ -251,7 +252,7 @@ void Scene2::OnDestroy()
 		}
 		tiles[i].clear();
 	}
-	tiles.clear();
+	tiles.clear();	
 }
 
 
@@ -259,7 +260,6 @@ void Scene2::OnDestroy()
 void Scene2::Update(const float time) 
 {
 	blinky->Update(time);
-
 }
 
 void Scene2::Render()

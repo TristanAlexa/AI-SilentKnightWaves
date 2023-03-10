@@ -188,27 +188,27 @@ void Character::SteerToArriveToPlayer(SteeringOutput* steering)
 
 void Character::SteerToFollowPath(SteeringOutput* steering)
 {
-	//vector<SteeringOutput*> steering_outputs;
-	//Path* pathToFollow = path;
+	vector<SteeringOutput*> steering_outputs;
+	Body* target = new Body();
 
-	//SteeringBehaviour* steering_algorithm = new FollowAPath(body, pathToFollow);
-	//steering_outputs.push_back(steering_algorithm->getSteering());
+	SteeringBehaviour* steering_algorithm = new FollowAPath(body, target, path);
+	steering_outputs.push_back(steering_algorithm->getSteering());
 
-	//// Add together steering outputs
-	//for (int i = 0; i < steering_outputs.size(); i++)
-	//{
-	//	if (steering_outputs[i])
-	//	{
-	//		*steering += *steering_outputs[i];
-	//	}
-	//}
+	// Add together steering outputs
+	for (int i = 0; i < steering_outputs.size(); i++)
+	{
+		if (steering_outputs[i])
+		{
+			*steering += *steering_outputs[i];
+		}
+	}
 
-	//// clean up memory
-	//// (delete only those objects created in this function)
-	//if (steering_algorithm)
-	//{
-	//	delete steering_algorithm;
-	//}
+	// clean up memory
+	// (delete only those objects created in this function)
+	if (steering_algorithm)
+	{
+		delete steering_algorithm;
+	}
 }
 
 void Character::HandleEvents(const SDL_Event& event)
@@ -241,3 +241,5 @@ void Character::Render(float scale)
 	SDL_RenderCopyEx(renderer, body->getTexture(), nullptr, &square,
 		orientation, nullptr, SDL_FLIP_NONE);
 }
+
+

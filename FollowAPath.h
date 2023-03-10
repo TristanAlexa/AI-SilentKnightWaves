@@ -8,7 +8,7 @@ private:
 	Path* path;
 	
 public:
-	FollowAPath(Body* character_, Node* target_, Path* path_);
+	FollowAPath(Body* character_, Path* path_);
 	~FollowAPath();
 	SteeringOutput* getSteering() override;
 };

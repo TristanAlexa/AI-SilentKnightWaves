@@ -162,16 +162,7 @@ bool Scene2::OnCreate()
 	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
 	projectionMatrix = ndc * ortho;
 
-	// setup npcs
-	/// Turn on the SDL imaging subsystem
-	IMG_Init(IMG_INIT_PNG);
-
-	blinky = new Character(4);
-	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
-	{
-		return false;
-	}
-
+	
 	// setup and create tiles
 	tileWidth = 4.2f;
 	tileHeight = 3.0f;
@@ -210,6 +201,16 @@ bool Scene2::OnCreate()
 			}
 		}
 		cout << endl;
+	}
+
+	// setup npcs
+	/// Turn on the SDL imaging subsystem
+	IMG_Init(IMG_INIT_PNG);
+
+	blinky = new Character(4, path);
+	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
+	{
+		return false;
 	}
 
 	return true;

@@ -68,7 +68,7 @@ bool MainGameScene::OnCreate()
 
 
 	// Currently the character constructor defines what steering algorithm to use
-	blinky = new Character(3); 
+	//blinky = new Character(3); 
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
 	{
 		return false;

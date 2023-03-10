@@ -1,8 +1,8 @@
 #include "FollowAPath.h"
 
-FollowAPath::FollowAPath(Body* character_, Node* target_, Path* path_) : Arrive(character_,target), path(path_)
+FollowAPath::FollowAPath(Body* character_, Path* path_) : Arrive(character_,target), path(path_)
 {
-    path = new Path();
+    path = path_;
 }
 
 FollowAPath::~FollowAPath()
@@ -20,7 +20,7 @@ SteeringOutput* FollowAPath::getSteering()
 
     if (VMath::distance(character->getPos(), target_position) <= slowRadius)
     {
-        path->incrementCurrentNode(1);
+        path->incrementCurrentNode();
     }
 
     target->setPos(target_position);

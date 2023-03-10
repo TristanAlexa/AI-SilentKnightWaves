@@ -19,8 +19,7 @@ class Character  //NPC
 private:
 	class KinematicBody* body;
 	class Scene* scene;
-	class Node* node;
-	class Path* path;
+	//class Path* path;
 
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
@@ -32,13 +31,12 @@ private:
 public:
 
 	// Construct char defining an int that selects a steering algorithm
-	Character(int steerType_)
+	Character(int steerType_, vector<int> path_)
 	{
 		body = NULL;
 		scene = NULL;
 		steerType = steerType_;
-		node = NULL;
-		path = NULL;
+		//path = path_;
 
 	};
 

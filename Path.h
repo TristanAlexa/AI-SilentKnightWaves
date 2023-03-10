@@ -16,14 +16,10 @@ private:
 
 public:
 	Path();
-	Path(vector<Node*> nodes_);
 	~Path() {};
 
 	// incrememnts the currentNode while still in the valid list of nodes
-	void incrementCurrentNode(int currentNode_);
-
-	// returns the current node being evaluated
-	Node* getCurrentNode() { return nodes[currentNode]; }
+	void incrementCurrentNode();
 
 	// returns the x, y values of the node position created in the scene (the pos of the middle of each tile)
 	Vec3 getCurrentNodePos() { return nodes[currentNode]->getPosition(); } 

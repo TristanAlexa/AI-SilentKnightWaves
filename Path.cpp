@@ -1,17 +1,15 @@
 #include "Path.h"
 
-Path::Path(){}
-
-Path::Path(vector<Node*> nodes_)
+Path::Path()
 {
-	nodes = nodes_;
+	currentNode = 0;
 }
 
-void Path::incrementCurrentNode(int currentNode_)
+void Path::incrementCurrentNode()
 {
 	// increment current node while in range
-	if (currentNode_ < nodes.size() - 1)
+	if (currentNode < nodes.size() - 1)
 	{
-		currentNode_++;
+		currentNode++;
 	}
 }

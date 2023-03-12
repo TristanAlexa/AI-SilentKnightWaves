@@ -242,4 +242,7 @@ void Character::Render(float scale)
 		orientation, nullptr, SDL_FLIP_NONE);
 }
 
-
+void Character::SetSpawnPoint(Node* node_)
+{
+	body->setPos(node_->getPosition());
+}

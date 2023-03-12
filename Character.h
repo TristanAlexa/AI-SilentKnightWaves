@@ -53,7 +53,9 @@ public:
 	void HandleEvents(const SDL_Event& event);
 	void Render(float scale = 1.0f);
 
-	
+	// Set the position of a character to a node in the tile grid
+	void SetSpawnPoint(Node* node_);
+	// Set the path of tiles to follow
 	void setPath(Path* path_) { path = path_; }
 	
 };

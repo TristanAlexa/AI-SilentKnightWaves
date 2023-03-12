@@ -184,7 +184,7 @@ bool Scene2::OnCreate()
 	// Call dijksra to find shortest path and store the path in a Path obj
 	path = graph->Dijkstra(0, 15);
 	Path* p = new Path(path);
-
+	 
 	// If a path exists Print the node labels of the shortest path
 	if (path.empty())
 	{
@@ -215,7 +215,7 @@ bool Scene2::OnCreate()
 	}
 	// set the ai's path to the new path found by dijkstra
 	blinky->setPath(p);
-
+	blinky->SetSpawnPoint(path[0]);
 	return true;
 }
 

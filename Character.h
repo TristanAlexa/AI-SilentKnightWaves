@@ -19,8 +19,8 @@ class Character  //NPC
 private:
 	class KinematicBody* body;
 	class Scene* scene;
-	class Path* path;
-	vector<Node*> nodes;
+	Path* path;
+	
 
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
@@ -38,7 +38,7 @@ public:
 		body = NULL;
 		scene = NULL;
 		steerType = steerType_;
-		path = new Path(nodes);
+		path = NULL;
 	};
 
 	~Character()

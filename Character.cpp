@@ -190,7 +190,7 @@ void Character::SteerToFollowPath(SteeringOutput* steering)
 {
 	vector<SteeringOutput*> steering_outputs;
 	Body* target = new Body();
-
+	
 	SteeringBehaviour* steering_algorithm = new FollowAPath(body, target, path);
 	steering_outputs.push_back(steering_algorithm->getSteering());
 

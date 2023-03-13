@@ -19,7 +19,6 @@ void Path::incrementCurrentNode()
 Vec3 Path::getCurrentNodePos() {
 	if (!nodes.empty()) {
 		return nodes[currentNode]->getPosition();
-		
 	}
 	else {
 		// handle the case when the vector is empty, e.g. return a default position

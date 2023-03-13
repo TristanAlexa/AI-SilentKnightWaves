@@ -2,7 +2,7 @@
 
 FollowAPath::FollowAPath(Body* character_, Body* target_, Path* path_) : Arrive(character_,target_)
 {
-    path = new Path(nodesToFollow);
+    path = path_;
 }
 
 FollowAPath::~FollowAPath()

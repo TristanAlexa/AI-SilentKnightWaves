@@ -162,7 +162,6 @@ bool Scene2::OnCreate()
 	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
 	projectionMatrix = ndc * ortho;
 
-	
 	// setup and create tiles
 	tileWidth = 4.2f;
 	tileHeight = 3.0f;
@@ -182,9 +181,11 @@ bool Scene2::OnCreate()
 	calculateConnectionWeights();
 
 	// Call dijksra to find shortest path and store the path in a Path obj
-	path = graph->Dijkstra(0, 15);
+	int startNode = 14;
+	int endNode = 19;
+	path = graph->Dijkstra(startNode, endNode);
 	Path* p = new Path(path);
-	 
+
 	// If a path exists Print the node labels of the shortest path
 	if (path.empty())
 	{
@@ -283,3 +284,4 @@ void Scene2::Render()
 }
 
 void Scene2::HandleEvents(const SDL_Event& event) {}
+

@@ -7,12 +7,13 @@ class FollowAPath : public Arrive
 {
 private:
 	Path* path;
-	vector <Node*> nodesToFollow;
-	
 public:
 	FollowAPath(Body* character_, Body* target_, Path* path_);
-	~FollowAPath();
+	~FollowAPath() {}
+
+	// Overrides the Arrive getSteering function to arrive at a series of nodes in a path
 	SteeringOutput* getSteering() override;
+
 };
 
 #endif;

@@ -57,7 +57,9 @@ public:
 	void SetSpawnPoint(Node* node_);
 	// Set the path of tiles to follow
 	void setPath(Path* path_) { path = path_; }
-	
+	// Return the body of the character
+	KinematicBody* getBody() { return body; }
+
 };
 
 #endif

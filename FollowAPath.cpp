@@ -5,11 +5,7 @@ FollowAPath::FollowAPath(Body* character_, Body* target_, Path* path_) : Arrive(
     path = path_;
 }
 
-FollowAPath::~FollowAPath()
-{
-    delete path;
-}
-
+// Overrides the Arrive getSteering function to arrive at a series of nodes in a path
 SteeringOutput* FollowAPath::getSteering()
 {
     Vec3 target_position;

@@ -9,19 +9,17 @@ using namespace MATH;
 class Path
 {
 private:
-	vector<Node*> nodes;
-
-	// tracks progress of character along path
-	int currentNode = 0;
+	vector<Node*> nodes; 
+	int currentNode;
 
 public:
-	Path(vector<Node*> nodes_);
-	~Path() {};
+	Path(const vector<Node*> nodes_);
+	~Path() {}
 
-	// incrememnts the currentNode while still in the valid list of nodes
-	void incrementCurrentNode();
+	// Incrememnts the currentNode to evaluate while still in the valid list of nodes
+	void incrementCurrentNode(); 
 
-	// returns the x, y values of the node position created in the scene (the pos of the middle of each tile)
+	// Returns the x, y position values of the node currently being evaluated
 	Vec3 getCurrentNodePos();
 };
 #endif;

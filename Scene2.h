@@ -24,8 +24,13 @@ private:
 	Graph* graph;
 	vector<Node*> sceneNodes;
 	float tileWidth, tileHeight;
-	vector< vector <Tile*> > tiles;         // 2D matrix
-	vector<int> blockedTiles = { 8,13,20 }; // tiles at these node positions will be blocked                       
+	// 2D matrix of tiles
+	vector< vector <Tile*> > tiles; 
+	// tiles at these node positions will be blocked
+	vector<int> blockedTiles = { 13,15,16,17,18,19,20,22, //bottom
+								37,39,49,51,			  //left
+								44,46,56,58,			  //right
+								73,75,76,77,78,79,80,82 };//top                        
 
 	void createTiles(int rows_, int cols_);
 	void calculateConnectionWeights();

@@ -8,6 +8,7 @@ Window::Window(int width_, int height_){
 	window = nullptr;
 	width = width_;
 	height = height_;
+	renderer = nullptr;
 }
 
 bool Window::OnCreate(){

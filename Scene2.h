@@ -18,6 +18,8 @@ private:
 	Matrix4 projectionMatrix;
 	Matrix4     inverseProjection;
 
+	// Game objects
+	Body* tower;
 	// NPC vars
 	Character* blinky;
 	// Path finding vars
@@ -34,6 +36,9 @@ private:
 
 	void createTiles(int rows_, int cols_);
 	void calculateConnectionWeights();
+
+	void createTowerObj();
+	void RenderTowerObj(float scale);
 public:
 	
 	Scene2(SDL_Window* sdlWindow, GameManager* game_);

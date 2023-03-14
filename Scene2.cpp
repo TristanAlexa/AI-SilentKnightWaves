@@ -11,11 +11,14 @@ Scene2::Scene2(SDL_Window* sdlWindow_, GameManager* game_)
 	tileWidth = 0.0f;
 	tileHeight = 0.0f;
 	blinky = nullptr;
+	tower = nullptr;
 }
 
 Scene2::~Scene2()
 {
 	// memory clean ups
+	if (tower)
+		delete tower;
 	if (blinky)
 	{
 		blinky->OnDestroy();
@@ -153,6 +156,49 @@ void Scene2::calculateConnectionWeights()
 	}
 }
 
+// Creates a new instance Body instance + sets the image and texture for the tower
+void Scene2::createTowerObj()
+{
+	SDL_Surface* image;
+	SDL_Texture* texture;
+
+	// Set up tower object to be a standstill gameobject
+	tower = new Body(Vec3(16.0f, 2.0f, 0.0f), Vec3(), Vec3(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	image = IMG_Load("tower.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
+	tower->setTexture(texture);
+	SDL_FreeSurface(image);
+}
+
+// Render the tower objects texture
+void Scene2::RenderTowerObj(float scale)
+{
+	// Create SDL rectangle, and populate data
+	SDL_Rect square;
+	Vec3 screenCoords;
+	int    w, h;
+
+	// convert the position from game coords to screen coords
+	screenCoords = projectionMatrix * tower->getPos();
+	SDL_QueryTexture(tower->getTexture(), nullptr, nullptr, &w, &h);
+
+	// The square's x and y values represent the top left corner of
+	// where SDL will draw the .png image
+	// The 0.5f * w/h offset is to place the .png so that pos represents the center
+	// (Note the y axis for screen coords points downward, hence subtractions!!!!)
+	square.x = static_cast<int>(screenCoords.x - 0.5f * w);
+	square.y = static_cast<int>(screenCoords.y - 0.5f * h);
+	square.w = static_cast<int>(w * scale);
+	square.h = static_cast<int>(h * scale);
+
+	float orientation = tower->getOrientation();
+	// Convert character orientation from radians to degrees.
+	float orientationDegrees = orientation * 180.0f / M_PI;
+
+	SDL_RenderCopyEx(renderer, tower->getTexture(), nullptr, &square,
+		orientationDegrees, nullptr, SDL_FLIP_NONE);
+}
+
 bool Scene2::OnCreate()
 {
 	int w, h;
@@ -182,7 +228,7 @@ bool Scene2::OnCreate()
 
 	// Call dijksra to find shortest path and store the path in a Path obj
 	int startNode = 0;
-	int endNode = 81;
+	int endNode = 42;
 	path = graph->Dijkstra(startNode, endNode);
 	Path* p = new Path(path);
 
@@ -205,9 +251,10 @@ bool Scene2::OnCreate()
 		cout << endl;
 	}
 
-	// setup npcs
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
+	createTowerObj();
+	// setup npcs
 
 	blinky = new Character(4);
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
@@ -217,6 +264,7 @@ bool Scene2::OnCreate()
 	// set the ai's path to the new path found by dijkstra
 	blinky->setPath(p);
 	blinky->SetSpawnPoint(path[0]);
+	
 	return true;
 }
 
@@ -229,6 +277,8 @@ void Scene2::OnDestroy()
 		blinky->OnDestroy();
 		delete blinky;
 	}
+	if (tower)
+		delete tower;
 	// NODES
 	for (int i = 0; i < sceneNodes.size(); i++)
 	{
@@ -277,9 +327,11 @@ void Scene2::Render()
 			tiles[i][j]->Render();
 		}
 	}
-
+	// Render tower object
+	// Render NPCS
 	blinky->Render(0.15);
-	// end of render call
+	RenderTowerObj(0.3);
+	
 	SDL_RenderPresent(renderer);
 }
 

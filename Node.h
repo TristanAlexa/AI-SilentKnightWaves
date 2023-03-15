@@ -10,6 +10,8 @@ private:
 	Vec3 pos;
 
 public:
+	// Node is used as an object for the graph and data structures
+	// Each node contains its own label and position
 	Node(int label_, Vec3 pos_)
 	{
 		label = label_;

@@ -4,6 +4,8 @@ Graph::Graph()
 {
 
 }
+
+// Initializes the matrix of costs and sets up the mapping of nodes
 bool Graph::OnCreate(vector<Node*> nodes_)
 {
 	// given a list of nodes, initialize a matrix of costs with 0.0f weights
@@ -24,12 +26,10 @@ bool Graph::OnCreate(vector<Node*> nodes_)
 		// Set up the connections
 		cost[i].resize(numNodes);
 
-
 		for (int j = 0; j < numNodes; j++)
 		{
 			// initialize coneection
 			cost[i][j] = 0.0f;
-
 		}
 	}
 	return true;
@@ -48,9 +48,9 @@ int Graph::numNodes()
 	return node.size();
 }
 
+// Defines the cost (how difficult) it is to move from one node to another
 void Graph::addWeightConnection(int fromNode, int toNode, float weight)
 {
-	// [i][j]
 	cost[fromNode][toNode] = weight;
 }
 
@@ -93,10 +93,13 @@ struct ComparePriority
 };
 
 /*
-	loop through the neighbors of the current node
-	calculate the new cost of each neighbor
+	Outputs a path to follow by:
+	Loop through the neighbors of the current node being evaluated,
+	calculates the new cost of each neighbor,
 	and add it to the frontier if it hasn't been visited before 
-	or if the new cost is less than the previous cost of that neighbor
+	or if the new cost is less than the previous cost of that neighbor.
+	The path is from the came_from vector which kept track of the path 
+	that led to each node
 */
 vector<Node*> Graph::Dijkstra(int start, int goal)
 {
@@ -117,29 +120,21 @@ vector<Node*> Graph::Dijkstra(int start, int goal)
 	map<int, float> cost_so_far;  // a dictionary that matches the node label to a float
 	cost_so_far[start] = 0.0f;
 
-	// implement the algorithm
-
-	// loop through the frontier, while not empty
 	while (!frontier.empty())
 	{
-		// get the top node, from frontier and pop it off
 		current = frontier.top().node;
 		frontier.pop();
 
-		//if its the goal then break out of the loop
 		if (current->getLabel() == goal)
 		{
 			break;
 		}
 
-		// for the neighbours of current node
 		vector<int> neighbours = this->neighbours(current->getLabel());
 		for (int i = 0; i < neighbours.size(); i++)
 		{
 			int next = neighbours[i];
-			// calculate the new cost
 			new_cost = cost_so_far[current->getLabel()] + cost[current->getLabel()][next];
-			//if next is not an index in cost_so_far, or new cost is lower
 			if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
 			{
 				// found a better path, so update data structures

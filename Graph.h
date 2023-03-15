@@ -12,7 +12,7 @@ using namespace std;
 class Graph
 {
 private:
-	// a lit of the nodes
+	// a list of the nodes
 	// Could use STL vector, but map matches some textbooks
 	map<int, Node*> node;
 

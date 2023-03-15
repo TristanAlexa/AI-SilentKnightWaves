@@ -43,9 +43,10 @@ Scene2::~Scene2()
 	tiles.clear();
 }
 
-/* Resizes the matrix to have a specified number of rowsand coloums
-   Create a new node for each row and coloumn and set its position at half the size of the current tiles width and height values
-   Create a new tile object and store it at the current row and column node position using tiles[i][j] */
+// Pushes a new node into the sceneNodes vector starting at label 0, 
+// Creates a new tile for each new node added into the sceneNodes vector
+// If a node label integer matches a integer in the vector of blockedTiles, 
+	// we set that tile to be a blocked tile (different colour/ no connections made)
 void Scene2::createTiles(int rows_, int cols_)
 {
 	tiles.resize(rows_);
@@ -71,11 +72,6 @@ void Scene2::createTiles(int rows_, int cols_)
 			n = new Node(label, tilePos);
 			sceneNodes.push_back(n);
 			
-			// Testing getting node position
-			Vec3 nodePos = n->getPosition();
-			cout << "Node Label-> (" << label << ") is at position: " << nodePos.x << "," << nodePos.y << endl;
-			
-
 			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
 			{
 				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
@@ -93,6 +89,7 @@ void Scene2::createTiles(int rows_, int cols_)
 	}
 }
 
+// Adds a connection weight between each tile and their neighbours if the neighbouring tile is not a blocked tile
 void Scene2::calculateConnectionWeights()
 {
 	int rows = tiles.size();
@@ -228,34 +225,14 @@ bool Scene2::OnCreate()
 
 	// Call dijksra to find shortest path and store the path in a Path obj
 	int startNode = 0;
-	int endNode = 42;
+	int endNode = 95;
 	path = graph->Dijkstra(startNode, endNode);
 	Path* p = new Path(path);
-
-	// If a path exists Print the node labels of the shortest path
-	if (path.empty())
-	{
-		cout << "No path found by Dijkstra." << endl;
-	}
-	else
-	{
-		cout << "Shortest path found by Dijkstra:";
-		for (int i = 0; i < path.size(); i++)
-		{
-			cout << path[i]->getLabel();
-			if (i < path.size() - 1)
-			{
-				cout << " -> ";
-			}
-		}
-		cout << endl;
-	}
 
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
 	createTowerObj();
 	// setup npcs
-
 	blinky = new Character(4);
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
 	{

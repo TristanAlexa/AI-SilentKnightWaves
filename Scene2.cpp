@@ -206,8 +206,8 @@ bool Scene2::OnCreate()
 	projectionMatrix = ndc * ortho;
 
 	// setup and create tiles
-	tileWidth = 2.1f; //KEEP VALUE
-	tileHeight = 1.9f; //KEEP VALUE
+	tileWidth = 2.1f; 
+	tileHeight = 1.9f; 
 	int cols = ceil((xAxis - 0.5f * tileWidth) / tileWidth);
 	int rows = ceil((yAxis - 0.5f * tileHeight) / tileHeight);
 	createTiles(rows, cols);
@@ -224,8 +224,8 @@ bool Scene2::OnCreate()
 	calculateConnectionWeights();
 
 	// Call dijksra to find shortest path and store the path in a Path obj
-	int startNode = 0;
-	int endNode = 95;
+	int startNode = 85;
+	int endNode = 3;
 	path = graph->Dijkstra(startNode, endNode);
 	Path* p = new Path(path);
 

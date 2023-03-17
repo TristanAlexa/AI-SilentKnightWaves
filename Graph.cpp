@@ -92,15 +92,7 @@ struct ComparePriority
 	}
 };
 
-/*
-	Outputs a path to follow by:
-	Loop through the neighbors of the current node being evaluated,
-	calculates the new cost of each neighbor,
-	and add it to the frontier if it hasn't been visited before 
-	or if the new cost is less than the previous cost of that neighbor.
-	The path is from the came_from vector which kept track of the path 
-	that led to each node
-*/
+// Returns the shortest and lowest costing path between the two passed in nodes
 vector<Node*> Graph::Dijkstra(int start, int goal)
 {
 	float new_cost;
@@ -120,6 +112,8 @@ vector<Node*> Graph::Dijkstra(int start, int goal)
 	map<int, float> cost_so_far;  // a dictionary that matches the node label to a float
 	cost_so_far[start] = 0.0f;
 
+	/*  While PQ != empty, loop through the neighbours of the current node being evaluated, and calculate the new cost of each neighbour
+		Nodes are added to the PQ, if not beeen visisted, or if the new cost is == or < the previous cost*/
 	while (!frontier.empty())
 	{
 		current = frontier.top().node;
@@ -137,7 +131,6 @@ vector<Node*> Graph::Dijkstra(int start, int goal)
 			new_cost = cost_so_far[current->getLabel()] + cost[current->getLabel()][next];
 			if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
 			{
-				// found a better path, so update data structures
 				cost_so_far[next] = new_cost;
 				priority = new_cost;
 				frontier.push(NodeAndPriority{ node[next], priority });
@@ -146,7 +139,7 @@ vector<Node*> Graph::Dijkstra(int start, int goal)
 		}
 	}
 
-	// follow the breadcrumbs in came_from to produce path
+	// The returned path is the list of nodes added to the came_from vector from keeping track of the nodes we kept
 	vector<Node*> path = {};
 
 	if (came_from[goal] != 0)

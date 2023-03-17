@@ -233,7 +233,7 @@ bool Scene2::OnCreate()
 	IMG_Init(IMG_INIT_PNG);
 	createTowerObj();
 	// setup npcs
-	blinky = new Character(4);
+	//blinky = new Character(4);
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
 	{
 		return false;

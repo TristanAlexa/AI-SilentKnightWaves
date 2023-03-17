@@ -74,8 +74,13 @@ bool Scene1::OnCreate() {
 	SDL_FreeSurface(image);
 
 	
-	blinky = new Character(3);
+	blinky = new Character();
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png") )
+	{
+		return false;
+	}
+	// If this call is not successful, OnCreate() returns false
+	if (!blinky->readDecisionTreeXML("playerinrange.xml"))
 	{
 		return false;
 	}

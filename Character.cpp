@@ -62,12 +62,19 @@ void Character::Update(float deltaTime)
 	SteeringOutput* steering;
 	steering = new SteeringOutput();
 
-	// set up steering types for the new constructor
-	if (steerType == 1)
+	DecisionTreeNode* action = decider->makeDecision();
+	Action* a = static_cast<Action*>(action);
+
+	switch (a->getValue())
 	{
+	case ACTION_SET::SEEK:
 		SteerToSeekPlayer(steering);
+		break;
+	case ACTION_SET::DO_NOTHING:
+		break;
 	}
-	else if (steerType == 2)
+	
+	/*else if (steerType == 2)
 	{
 		SteerToFleePlayer(steering);
 	}
@@ -79,7 +86,7 @@ void Character::Update(float deltaTime)
 	else if (steerType == 4)
 	{
 		SteerToFollowPath(steering);
-	}
+	}*/
 	
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);
@@ -242,7 +249,32 @@ void Character::Render(float scale)
 		orientation, nullptr, SDL_FLIP_NONE);
 }
 
+Vec3 Character::getPos()
+{
+	return body->getPos();
+}
+
+Vec3 Character::getPlayerPos()
+{
+	return scene->game->getPlayer()->getPos();
+}
+
 void Character::SetSpawnPoint(Node* node_)
 {
 	body->setPos(node_->getPosition());
+}
+
+bool Character::readDecisionTreeXML(string filename_)
+{
+	// Not actually reading a file
+	// [TODO] error checking if the file exists, can it be opened, read from?
+	if (filename_ == "playerinrange.xml")
+	{
+		DecisionTreeNode* trueNode = new Action(ACTION_SET::SEEK);
+		DecisionTreeNode* falseNode = new Action(ACTION_SET::DO_NOTHING); //right now we will always get the false node
+		
+		// create a new derived class for decision to actually know when to return true or false
+		decider = new PlayerInRangeDecision { trueNode, falseNode, this };
+	}
+	return true;
 }

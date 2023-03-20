@@ -70,6 +70,12 @@ void Character::Update(float deltaTime)
 	case ACTION_SET::SEEK:
 		SteerToSeekPlayer(steering);
 		break;
+	case ACTION_SET::ARRIVE:
+		SteerToArriveToPlayer(steering);
+		break;
+	case ACTION_SET::FOLLOWAPATH:
+		SteerToFollowPath(steering);
+		break;
 	case ACTION_SET::DO_NOTHING:
 		break;
 	}
@@ -77,15 +83,6 @@ void Character::Update(float deltaTime)
 	/*else if (steerType == 2)
 	{
 		SteerToFleePlayer(steering);
-	}
-	
-	else if (steerType == 3)
-	{
-		SteerToArriveToPlayer(steering);
-	}
-	else if (steerType == 4)
-	{
-		SteerToFollowPath(steering);
 	}*/
 	
 	// apply the steering to the equations of motion
@@ -270,8 +267,8 @@ bool Character::readDecisionTreeXML(string filename_)
 	// [TODO] error checking if the file exists, can it be opened, read from?
 	if (filename_ == "playerinrange.xml")
 	{
-		DecisionTreeNode* trueNode = new Action(ACTION_SET::SEEK);
-		DecisionTreeNode* falseNode = new Action(ACTION_SET::DO_NOTHING); //right now we will always get the false node
+		DecisionTreeNode* trueNode = new Action(ACTION_SET::ARRIVE);
+		DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH); 
 		
 		// create a new derived class for decision to actually know when to return true or false
 		decider = new PlayerInRangeDecision { trueNode, falseNode, this };

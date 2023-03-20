@@ -3,7 +3,7 @@
 
 #include "DecisionTreeNode.h"
 
-enum class ACTION_SET {SEEK, DO_NOTHING}; //add more actions for the characters Arrive, follow path
+enum class ACTION_SET {SEEK, ARRIVE, FOLLOWAPATH, DO_NOTHING}; //add more actions for the characters Arrive, follow path
 class Action : public DecisionTreeNode
 {
 private:

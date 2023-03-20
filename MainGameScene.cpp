@@ -13,6 +13,8 @@ MainGameScene::MainGameScene(SDL_Window* sdlWindow_, GameManager* game_)
 	clyde = nullptr;
 	blinky = nullptr;
 
+	tower = nullptr;
+
 	graph = NULL;
 	tileWidth = 0.0f;
 	tileHeight = 0.0f;
@@ -31,7 +33,8 @@ MainGameScene::~MainGameScene()
 		blinky->OnDestroy();
 		delete blinky;
 	}
-
+	if (tower)
+		delete tower;
 	if (graph)
 	{
 		delete graph;
@@ -87,6 +90,8 @@ bool MainGameScene::OnCreate()
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
 
+	createTowerObj();
+
 	// Set player image (player created and values initialized in game manager)
 	SDL_Surface* image;
 	SDL_Texture* texture;
@@ -139,7 +144,8 @@ void MainGameScene::OnDestroy()
 		blinky->OnDestroy();
 		delete blinky;
 	}
-
+	if (tower)
+		delete tower;
 	if (graph)
 	{
 		delete graph;
@@ -224,6 +230,7 @@ void MainGameScene::Render()
 
 	blinky->Render(0.15f);
 	game->RenderPlayer(0.10f);
+	RenderTowerObj(0.3);
 	SDL_RenderPresent(renderer);
 }
 
@@ -337,4 +344,47 @@ void MainGameScene::calculateConnectionWeights()
 			}
 		}
 	}
+}
+
+// Creates a new instance Body instance + sets the image and texture for the tower
+void MainGameScene::createTowerObj()
+{
+	SDL_Surface* image;
+	SDL_Texture* texture;
+
+	// Set up tower object to be a standstill gameobject
+	tower = new Body(Vec3(16.0f, 2.0f, 0.0f), Vec3(), Vec3(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	image = IMG_Load("tower.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
+	tower->setTexture(texture);
+	SDL_FreeSurface(image);
+}
+
+// Render the tower objects texture
+void MainGameScene::RenderTowerObj(float scale)
+{
+	// Create SDL rectangle, and populate data
+	SDL_Rect square;
+	Vec3 screenCoords;
+	int    w, h;
+
+	// convert the position from game coords to screen coords
+	screenCoords = projectionMatrix * tower->getPos();
+	SDL_QueryTexture(tower->getTexture(), nullptr, nullptr, &w, &h);
+
+	// The square's x and y values represent the top left corner of
+	// where SDL will draw the .png image
+	// The 0.5f * w/h offset is to place the .png so that pos represents the center
+	// (Note the y axis for screen coords points downward, hence subtractions!!!!)
+	square.x = static_cast<int>(screenCoords.x - 0.5f * w);
+	square.y = static_cast<int>(screenCoords.y - 0.5f * h);
+	square.w = static_cast<int>(w * scale);
+	square.h = static_cast<int>(h * scale);
+
+	float orientation = tower->getOrientation();
+	// Convert character orientation from radians to degrees.
+	float orientationDegrees = orientation * 180.0f / M_PI;
+
+	SDL_RenderCopyEx(renderer, tower->getTexture(), nullptr, &square,
+		orientationDegrees, nullptr, SDL_FLIP_NONE);
 }

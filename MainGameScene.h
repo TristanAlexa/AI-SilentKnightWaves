@@ -21,9 +21,9 @@ private:
 	Matrix4 projectionMatrix;
 	Matrix4 inverseProjection;
 
-
 	StaticBody* clyde; 	// Orange Ghost - using Kinematic Wander algorithm
 	Character* blinky;  // Red Ghost - using dynamic arrive or flee algorithm
+	Body* tower;
 
 	Graph* graph; 
 	vector<Node*> sceneNodes;
@@ -37,6 +37,8 @@ private:
 	void createTiles(int rows_, int cols_);
 	void calculateConnectionWeights();
 
+	void createTowerObj();
+	void RenderTowerObj(float scale);
 
 public:
 	MainGameScene(SDL_Window* sdlWindow, GameManager* game_);

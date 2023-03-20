@@ -57,7 +57,7 @@ bool GameManager::OnCreate() {
     float maxAcceleration = 10.0f;
     float maxRotation = 1.0f;
     float maxAngular = 1.0f;
-    Vec3 position(0.5f * currentScene->getxAxis(), 0.5f * currentScene->getyAxis(), 0.0f);
+    Vec3 position(0.22f * currentScene->getxAxis(), 0.5f * currentScene->getyAxis(), 0.0f);
     Vec3 velocity(0.0f, 0.0f, 0.0f);
     Vec3 acceleration(0.0f, 0.0f, 0.0f);
 

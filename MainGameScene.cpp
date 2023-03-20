@@ -12,6 +12,10 @@ MainGameScene::MainGameScene(SDL_Window* sdlWindow_, GameManager* game_)
 	// Init NPCs
 	clyde = nullptr;
 	blinky = nullptr;
+
+	graph = NULL;
+	tileWidth = 0.0f;
+	tileHeight = 0.0f;
 }
 
 MainGameScene::~MainGameScene()
@@ -28,6 +32,21 @@ MainGameScene::~MainGameScene()
 		delete blinky;
 	}
 
+	if (graph)
+	{
+		delete graph;
+	}
+
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		for (int j = 0; j < tiles[i].size(); j++)
+		{
+			delete tiles[i][j];
+		}
+		tiles[i].clear();
+	}
+	tiles.clear();
+
 }
 
 bool MainGameScene::OnCreate()
@@ -40,6 +59,30 @@ bool MainGameScene::OnCreate()
 	Matrix4 ndc = MMath::viewportNDC(w, h);
 	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
 	projectionMatrix = ndc * ortho;
+
+	// setup and create tiles
+	tileWidth = 2.1f;
+	tileHeight = 1.9f;
+	int cols = ceil((xAxis - 0.5f * tileWidth) / tileWidth);
+	int rows = ceil((yAxis - 0.5f * tileHeight) / tileHeight);
+	createTiles(rows, cols);
+
+	// create the graph and add the list of nodes to the graph
+	graph = new Graph();
+	graph->OnCreate(sceneNodes);
+	if (!graph->OnCreate(sceneNodes))
+	{
+		cerr << "Error creating nodes" << endl;
+		return false;
+	}
+	// create connections
+	calculateConnectionWeights();
+
+	// Call dijksra to find shortest path and store the path in a Path obj
+	int startNode = 85;
+	int endNode = 3;
+	path = graph->Dijkstra(startNode, endNode);
+	Path* p = new Path(path);
 
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
@@ -68,11 +111,18 @@ bool MainGameScene::OnCreate()
 
 
 	// Currently the character constructor defines what steering algorithm to use
-	//blinky = new Character(3); 
+	blinky = new Character(); 
 	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
 	{
 		return false;
 	}
+	if (!blinky->readDecisionTreeXML("playerinrange.xml"))
+	{
+		cout << "ReadDecicionTreeXML failed" << endl;
+		return false;
+	}
+	blinky->setPath(p);
+	blinky->SetSpawnPoint(path[0]);
 	return true;
 }
 
@@ -89,6 +139,21 @@ void MainGameScene::OnDestroy()
 		blinky->OnDestroy();
 		delete blinky;
 	}
+
+	if (graph)
+	{
+		delete graph;
+	}
+
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		for (int j = 0; j < tiles[i].size(); j++)
+		{
+			delete tiles[i][j];
+		}
+		tiles[i].clear();
+	}
+	tiles.clear();
 }
 
 void MainGameScene::Update(const float deltaTime)
@@ -121,6 +186,15 @@ void MainGameScene::Render()
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 
+	// render all tiles
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		for (int j = 0; j < tiles[i].size(); j++)
+		{
+			tiles[i][j]->Render();
+		}
+	}
+
 	// Render the static body Clyde
 	SDL_Rect square;
 	Vec3 screenCoords;
@@ -148,7 +222,6 @@ void MainGameScene::Render()
 	SDL_RenderCopyEx(renderer, clyde->getTexture(), nullptr, &square,
 		orientationDegrees, nullptr, SDL_FLIP_NONE);
 
-	//blinkyFlee->Render(0.15f);
 	blinky->Render(0.15f);
 	game->RenderPlayer(0.10f);
 	SDL_RenderPresent(renderer);
@@ -160,4 +233,108 @@ void MainGameScene::HandleEvents(const SDL_Event& event)
 
 	// Send events to player as needed
 	game->getPlayer()->HandleEvents(event);
+}
+
+//Creates the grid of tiles 
+void MainGameScene::createTiles(int rows_, int cols_)
+{
+	tiles.resize(rows_);
+	for (int i = 0; i < rows_; i++)
+	{
+		tiles[i].resize(cols_);
+	}
+
+	Node* n;
+	Tile* t;
+	int i, j, label;
+
+	i = 0; //rows
+	j = 0; //coloumns
+	label = 0; // grid tile number
+
+	for (float y = 0.5f * tileHeight; y < yAxis; y += tileHeight)
+	{
+		for (float x = 0.5f * tileWidth; x < xAxis; x += tileWidth)
+		{
+			//create tiles and nodes
+			Vec3 tilePos = Vec3(x, y, 0);
+			n = new Node(label, tilePos);
+			sceneNodes.push_back(n);
+
+			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
+			{
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
+			}
+			else
+			{
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false); //create regular tile
+			}
+			tiles[i][j] = t;
+			j++;
+			label++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+// Adds a connection weight between each tile and their neighbours if the neighbouring tile is not a blocked tile
+void MainGameScene::calculateConnectionWeights()
+{
+	int rows = tiles.size();
+	int cols = tiles[0].size();
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			//[i+1][j-1]     [i+1][j]    [i+1][j+1]
+			// [i][j-1]       [i][j]     [i][j+1]
+			//[i-1][j-1]     [i-1[j]     [i-1][j+1]
+
+			Tile* fromTile = tiles[i][j];
+			int from = fromTile->getNode()->getLabel();
+
+			// left: [i][j-1]
+			if (j > 0)
+			{
+				if (!tiles[i][j - 1]->isBlocked())
+				{
+					int to = tiles[i][j - 1]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileWidth);
+				}
+
+			}
+			// right: [i][j+1]
+			if (j < cols - 1)
+			{
+				if (!tiles[i][j + 1]->isBlocked())
+				{
+					int to = tiles[i][j + 1]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileWidth);
+				}
+
+			}
+			// above: [i+1][j]
+			if (i < rows - 1)
+			{
+				if (!tiles[i + 1][j]->isBlocked())
+				{
+					int to = tiles[i + 1][j]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileHeight);
+				}
+
+			}
+			// below: [i-1[j]
+			if (i > 0)
+			{
+				if (!tiles[i - 1][j]->isBlocked())
+				{
+					int to = tiles[i - 1][j]->getNode()->getLabel();
+					graph->addWeightConnection(from, to, tileHeight);
+				}
+
+			}
+		}
+	}
 }

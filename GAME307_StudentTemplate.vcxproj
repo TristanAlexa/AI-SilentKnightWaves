@@ -139,6 +139,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Condition.cpp" />
+    <ClCompile Include="ConditionInJail.cpp" />
     <ClCompile Include="ConditionInRange.cpp" />
     <ClCompile Include="Decision.cpp" />
     <ClCompile Include="DecisionTreeNode.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Condition.h" />
+    <ClInclude Include="ConditionInJail.h" />
     <ClInclude Include="ConditionInRange.h" />
     <ClInclude Include="Decision.h" />
     <ClInclude Include="DecisionTreeNode.h" />

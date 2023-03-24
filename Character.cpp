@@ -314,6 +314,7 @@ bool Character::readStateMachineXML(string filename_)
 
 	State* followAPath = new State(STATE::FOLLOWAPATH);
 	State* arriveToPlayer = new State(STATE::ARRIVE);
+	State* doNothing = new State(STATE::DO_NOTHING); //1.
 
 	Condition* ifInRange = new ConditionInRange(this);
 
@@ -322,6 +323,10 @@ bool Character::readStateMachineXML(string filename_)
 	Condition* ifOutOfRange = new ConditionOutOfRange(this);
 
 	arriveToPlayer->addTransition(new Transition(ifOutOfRange, followAPath));
+
+	Condition* ifInJail = new ConditionInJail(this); //3. create condition in jail
+
+	arriveToPlayer->addTransition(new Transition(ifInJail, doNothing)); //2.
 
 	stateMachine->setInitialState(followAPath);
 	return true;

@@ -17,6 +17,7 @@
 #include "InJailDecision.h"
 #include "StateMachine.h"
 #include "ConditionInRange.h"
+#include "ConditionInJail.h"
 
 using namespace std;
 

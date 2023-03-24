@@ -14,6 +14,7 @@
 #include "Action.h"
 #include "Decision.h"
 #include "PlayerInRangeDecision.h"
+#include "InJailDecision.h"
 
 using namespace std;
 

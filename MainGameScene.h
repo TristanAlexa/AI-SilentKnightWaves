@@ -30,7 +30,7 @@ private:
 	float tileWidth, tileHeight;
 	vector< vector <Tile*> > tiles;
 	
-	std::vector<int> jailTiles = { 0,11,84,95 }; //four corners
+	vector<int> jailTiles = { 0,11,84,95 }; //four corners
 	vector<int> blockedTiles = { 13,15,16,17,18,19,20,22, //bottom
 								37,39,49,51,			  //left
 								44,46,56,58,			  //right
@@ -56,8 +56,9 @@ public:
 	Matrix4 getProjectionMatrix() { return projectionMatrix; }
 	Matrix4 getInverseMatrix() { return inverseProjection; }
 
+	
+
 	// vector to store the path found by Dijkstra
 	vector<Node*> path;
-
 };
 #endif;

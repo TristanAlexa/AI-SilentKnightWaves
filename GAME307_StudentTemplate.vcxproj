@@ -144,6 +144,7 @@
     <ClCompile Include="FollowAPath.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="InJailDecision.cpp" />
     <ClCompile Include="KinematicArrive.cpp" />
     <ClCompile Include="KinematicSeek.cpp" />
     <ClCompile Include="KinematicSteeringOutput.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="FollowAPath.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="InJailDecision.h" />
     <ClInclude Include="KinematicArrive.h" />
     <ClInclude Include="KinematicSeek.h" />
     <ClInclude Include="KinematicSteeringOutput.h" />

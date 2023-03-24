@@ -121,9 +121,14 @@ bool MainGameScene::OnCreate()
 	{
 		return false;
 	}
-	if (!blinky->readDecisionTreeXML("playerinrange.xml"))
+	/*if (!blinky->readDecisionTreeXML("playerinrange.xml"))
 	{
 		cout << "ReadDecicionTreeXML failed" << endl;
+		return false;
+	}*/
+	if (!blinky->readDecisionTreeXML("injail.xml"))
+	{
+		cout << "InajilXML tailed" << endl;
 		return false;
 	}
 	blinky->setPath(p);

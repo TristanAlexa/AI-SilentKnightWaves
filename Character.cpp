@@ -77,6 +77,7 @@ void Character::Update(float deltaTime)
 		SteerToFollowPath(steering);
 		break;
 	case ACTION_SET::DO_NOTHING:
+		getBody()->setVel(Vec3(0.0f, 0.0f, 0.0f));
 		break;
 	}
 	
@@ -265,13 +266,21 @@ bool Character::readDecisionTreeXML(string filename_)
 {
 	// Not actually reading a file
 	// [TODO] error checking if the file exists, can it be opened, read from?
-	if (filename_ == "playerinrange.xml")
+	//if (filename_ == "playerinrange.xml")
+	//{
+	//	DecisionTreeNode* trueNode = new Action(ACTION_SET::ARRIVE);
+	//	DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH); 
+	//	
+	//	// create a new derived class for decision to actually know when to return true or false
+	//	decider = new PlayerInRangeDecision { trueNode, falseNode, this };
+	//}
+
+	if (filename_ == "injail.xml")
 	{
-		DecisionTreeNode* trueNode = new Action(ACTION_SET::ARRIVE);
-		DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH); 
-		
-		// create a new derived class for decision to actually know when to return true or false
-		decider = new PlayerInRangeDecision { trueNode, falseNode, this };
+		DecisionTreeNode* trueNode = new Action(ACTION_SET::DO_NOTHING);
+		DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH);
+
+		decider = new InJailDecision{ trueNode, falseNode, this };
 	}
 	return true;
 }

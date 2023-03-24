@@ -15,6 +15,8 @@
 #include "Decision.h"
 #include "PlayerInRangeDecision.h"
 #include "InJailDecision.h"
+#include "StateMachine.h"
+#include "ConditionInRange.h"
 
 using namespace std;
 
@@ -26,6 +28,7 @@ private:
 	Path* path;
 	// Decider variable to hold the Decision Tree
 	DecisionTreeNode* decider;
+	StateMachine* stateMachine;
 	
 
 	void SteerToSeekPlayer(SteeringOutput* steering);     
@@ -47,6 +50,7 @@ public:
 		//steerType = steerType_;
 		path = NULL;
 		decider = NULL;
+		stateMachine = NULL;
 	};
 
 	~Character()
@@ -73,6 +77,7 @@ public:
 
 	// Decision making
 	bool readDecisionTreeXML(string filename_);
+	bool readStateMachineXML(string filename_);
 
 };
 

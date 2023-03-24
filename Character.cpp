@@ -62,24 +62,47 @@ void Character::Update(float deltaTime)
 	SteeringOutput* steering;
 	steering = new SteeringOutput();
 
-	DecisionTreeNode* action = decider->makeDecision();
-	Action* a = static_cast<Action*>(action);
-
-	switch (a->getValue())
+	if (!decider == NULL)
 	{
-	case ACTION_SET::SEEK:
-		SteerToSeekPlayer(steering);
-		break;
-	case ACTION_SET::ARRIVE:
-		SteerToArriveToPlayer(steering);
-		break;
-	case ACTION_SET::FOLLOWAPATH:
-		SteerToFollowPath(steering);
-		break;
-	case ACTION_SET::DO_NOTHING:
-		getBody()->setVel(Vec3(0.0f, 0.0f, 0.0f));
-		break;
+		DecisionTreeNode* action = decider->makeDecision();
+		Action* a = static_cast<Action*>(action);
+
+		switch (a->getValue())
+		{
+		case ACTION_SET::SEEK:
+			SteerToSeekPlayer(steering);
+			break;
+		case ACTION_SET::ARRIVE:
+			SteerToArriveToPlayer(steering);
+			break;
+		case ACTION_SET::FOLLOWAPATH:
+			SteerToFollowPath(steering);
+			break;
+		case ACTION_SET::DO_NOTHING:
+			getBody()->setVel(Vec3(0.0f, 0.0f, 0.0f));
+			break;
+		}
 	}
+
+	if (stateMachine != NULL)
+	{
+		stateMachine->update();
+		switch (stateMachine->getCurrentStateName())
+		{
+		case STATE::SEEK:
+			SteerToSeekPlayer(steering);
+		case STATE::ARRIVE:
+			SteerToArriveToPlayer(steering);
+			break;
+		case STATE::FOLLOWAPATH:
+			SteerToFollowPath(steering);
+			break;
+		case STATE::DO_NOTHING:
+			getBody()->setVel(Vec3(0.0f, 0.0f, 0.0f));
+			break;
+		}
+	}
+	
 	
 	/*else if (steerType == 2)
 	{
@@ -266,14 +289,14 @@ bool Character::readDecisionTreeXML(string filename_)
 {
 	// Not actually reading a file
 	// [TODO] error checking if the file exists, can it be opened, read from?
-	//if (filename_ == "playerinrange.xml")
-	//{
-	//	DecisionTreeNode* trueNode = new Action(ACTION_SET::ARRIVE);
-	//	DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH); 
-	//	
-	//	// create a new derived class for decision to actually know when to return true or false
-	//	decider = new PlayerInRangeDecision { trueNode, falseNode, this };
-	//}
+	if (filename_ == "playerinrange.xml")
+	{
+		DecisionTreeNode* trueNode = new Action(ACTION_SET::ARRIVE);
+		DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH); 
+		
+		// create a new derived class for decision to actually know when to return true or false
+		decider = new PlayerInRangeDecision { trueNode, falseNode, this };
+	}
 
 	if (filename_ == "injail.xml")
 	{
@@ -282,5 +305,24 @@ bool Character::readDecisionTreeXML(string filename_)
 
 		decider = new InJailDecision{ trueNode, falseNode, this };
 	}
+	return true;
+}
+
+bool Character::readStateMachineXML(string filename_)
+{
+	stateMachine = new StateMachine();
+
+	State* followAPath = new State(STATE::FOLLOWAPATH);
+	State* arriveToPlayer = new State(STATE::ARRIVE);
+
+	Condition* ifInRange = new ConditionInRange(this);
+
+	followAPath->addTransition(new Transition(ifInRange, arriveToPlayer));
+
+	Condition* ifOutOfRange = new ConditionOutOfRange(this);
+
+	arriveToPlayer->addTransition(new Transition(ifOutOfRange, followAPath));
+
+	stateMachine->setInitialState(followAPath);
 	return true;
 }

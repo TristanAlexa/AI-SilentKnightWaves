@@ -69,7 +69,7 @@ bool MainGameScene::OnCreate()
 	int cols = ceil((xAxis - 0.5f * tileWidth) / tileWidth);
 	int rows = ceil((yAxis - 0.5f * tileHeight) / tileHeight);
 	createTiles(rows, cols);
-
+	
 	// create the graph and add the list of nodes to the graph
 	graph = new Graph();
 	graph->OnCreate(sceneNodes);
@@ -270,11 +270,15 @@ void MainGameScene::createTiles(int rows_, int cols_)
 
 			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
 			{
-				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true, false); // Create blocked tile
+			}
+			else if (find(jailTiles.begin(), jailTiles.end(), label) != jailTiles.end())
+			{
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false, true); // create jail tile
 			}
 			else
 			{
-				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false); //create regular tile
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false, false); //create regular tile
 			}
 			tiles[i][j] = t;
 			j++;

@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_, bool blockedTile_)
+Tile::Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_, bool blockedTile_, bool jailTile_)
 {
 	node = node_;
 	pos = pos_;
@@ -12,6 +12,7 @@ Tile::Tile(Node* node_, Vec3 pos_, float width_, float height_, Scene* scene_, b
 	a = 0;
 	scene = scene_;
 	blockedTile = blockedTile_;
+	jailTile = jailTile_;
 }
 
 void Tile::Render()
@@ -49,6 +50,13 @@ void Tile::Render()
 	if (blockedTile)
 	{
 		setRGBA(0, 0, 0, 0);
+		SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		SDL_RenderFillRect(renderer, &rect);
+	}
+
+	if (jailTile)
+	{
+		setRGBA(128, 128, 128, 128);
 		SDL_SetRenderDrawColor(renderer, r, g, b, a);
 		SDL_RenderFillRect(renderer, &rect);
 	}

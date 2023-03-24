@@ -29,6 +29,8 @@ private:
 	vector<Node*> sceneNodes;
 	float tileWidth, tileHeight;
 	vector< vector <Tile*> > tiles;
+	
+	std::vector<int> jailTiles = { 0,11,84,95 }; //four corners
 	vector<int> blockedTiles = { 13,15,16,17,18,19,20,22, //bottom
 								37,39,49,51,			  //left
 								44,46,56,58,			  //right

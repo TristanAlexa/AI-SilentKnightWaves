@@ -74,11 +74,11 @@ void Scene2::createTiles(int rows_, int cols_)
 			
 			if (find(blockedTiles.begin(), blockedTiles.end(), label) != blockedTiles.end())
 			{
-				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true); // Create blocked tile
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, true, false); // Create blocked tile
 			}
 			else
 			{
-				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false); //create regular tile
+				t = new Tile(n, tilePos, tileWidth, tileHeight, this, false, false); //create regular tile
 			}
 			tiles[i][j] = t;
 			j++;

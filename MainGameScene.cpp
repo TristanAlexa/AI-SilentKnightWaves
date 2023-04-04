@@ -83,7 +83,7 @@ bool MainGameScene::OnCreate()
 
 	// Call dijksra to find shortest path and store the path in a Path obj
 	int startNode = 85;
-	int endNode = 3;
+	int endNode = 42;
 	path = graph->Dijkstra(startNode, endNode);
 	Path* p = new Path(path);
 
@@ -121,22 +121,14 @@ bool MainGameScene::OnCreate()
 	{
 		return false;
 	}
-	/*if (!blinky->readDecisionTreeXML("playerinrange.xml"))
-	{
-		cout << "ReadDecicionTreeXML failed" << endl;
-		return false;
-	}*/
-	/*if (!blinky->readDecisionTreeXML("injail.xml"))
-	{
-		cout << "InajilXML tailed" << endl;
-		return false;
-	}*/
+	
 	if (!blinky->readStateMachineXML("blinkySM.xml"))
 	{
 		return false;
 	}
 	blinky->setPath(p);
 	blinky->SetSpawnPoint(path[0]);
+	
 	return true;
 }
 
@@ -246,7 +238,7 @@ void MainGameScene::Render()
 void MainGameScene::HandleEvents(const SDL_Event& event)
 {
 	// Send events to NPCs as needed
-
+	blinky->HandleEvents(event);
 	// Send events to player as needed
 	game->getPlayer()->HandleEvents(event);
 }

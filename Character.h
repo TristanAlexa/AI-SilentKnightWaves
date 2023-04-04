@@ -37,9 +37,7 @@ private:
 	void SteerToArriveToPlayer(SteeringOutput* steering);
 	void SteerToFollowPath(SteeringOutput* steering);
 
-	//int steerType; //dont need steer types as we are using decision making now
-					// each steer type should now be its own action
-
+	int health = 3;
 	
 public:
 
@@ -75,6 +73,9 @@ public:
 	void setPath(Path* path_) { path = path_; }
 	// Return the body of the character
 	KinematicBody* getBody() { return body; }
+
+	int getHealth();
+	void takeDamage(int damage_);
 
 	// Decision making
 	bool readDecisionTreeXML(string filename_);

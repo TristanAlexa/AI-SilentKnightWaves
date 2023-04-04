@@ -55,34 +55,11 @@ bool Character::setTextureWidth(string file)
 	return true;
 }
 
-
 void Character::Update(float deltaTime)
 {
 	// create a new overall steering output
 	SteeringOutput* steering;
 	steering = new SteeringOutput();
-
-	if (!decider == NULL)
-	{
-		DecisionTreeNode* action = decider->makeDecision();
-		Action* a = static_cast<Action*>(action);
-
-		switch (a->getValue())
-		{
-		case ACTION_SET::SEEK:
-			SteerToSeekPlayer(steering);
-			break;
-		case ACTION_SET::ARRIVE:
-			SteerToArriveToPlayer(steering);
-			break;
-		case ACTION_SET::FOLLOWAPATH:
-			SteerToFollowPath(steering);
-			break;
-		case ACTION_SET::DO_NOTHING:
-			getBody()->setVel(Vec3(0.0f, 0.0f, 0.0f));
-			break;
-		}
-	}
 
 	if (stateMachine != NULL)
 	{
@@ -241,7 +218,15 @@ void Character::SteerToFollowPath(SteeringOutput* steering)
 
 void Character::HandleEvents(const SDL_Event& event)
 {
-	// handle events here, if needed
+	// To simulate combat: when E is pressed, the char will take damage, lowering its health
+	if (event.type == SDL_KEYDOWN)
+	{
+		switch (event.key.keysym.scancode)
+		{
+		case SDL_SCANCODE_E:
+			takeDamage(1);
+		}
+	}
 }
 
 void Character::Render(float scale)
@@ -285,28 +270,16 @@ void Character::SetSpawnPoint(Node* node_)
 	body->setPos(node_->getPosition());
 }
 
-bool Character::readDecisionTreeXML(string filename_)
+int Character::getHealth()
 {
-	// Not actually reading a file
-	// [TODO] error checking if the file exists, can it be opened, read from?
-	if (filename_ == "playerinrange.xml")
-	{
-		DecisionTreeNode* trueNode = new Action(ACTION_SET::ARRIVE);
-		DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH); 
-		
-		// create a new derived class for decision to actually know when to return true or false
-		decider = new PlayerInRangeDecision { trueNode, falseNode, this };
-	}
-
-	if (filename_ == "injail.xml")
-	{
-		DecisionTreeNode* trueNode = new Action(ACTION_SET::DO_NOTHING);
-		DecisionTreeNode* falseNode = new Action(ACTION_SET::FOLLOWAPATH);
-
-		decider = new InJailDecision{ trueNode, falseNode, this };
-	}
-	return true;
+	return health;
 }
+
+void Character::takeDamage(int damage_)
+{
+	this->health -= damage_;
+}
+
 
 bool Character::readStateMachineXML(string filename_)
 {

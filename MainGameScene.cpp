@@ -30,7 +30,7 @@ MainGameScene::~MainGameScene()
 		if (blinky[i])
 		{
 			blinky[i]->OnDestroy();
-			delete blinky;
+			delete blinky[i];
 		}
 	}
 	
@@ -138,7 +138,7 @@ void MainGameScene::OnDestroy()
 		if (blinky[i])
 		{
 			blinky[i]->OnDestroy();
-			delete blinky;
+			delete blinky[i];
 		}
 	}
 	if (tower)

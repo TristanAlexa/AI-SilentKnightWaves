@@ -68,8 +68,10 @@ void Character::Update(float deltaTime)
 		{
 		case STATE::SEEK:
 			SteerToSeekPlayer(steering);
+			break;
 		case STATE::FLEE:
 			SteerToFleePlayer(steering);
+			break;
 		case STATE::ARRIVE:
 			SteerToArriveToPlayer(steering);
 			break;

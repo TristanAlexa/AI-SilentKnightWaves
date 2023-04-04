@@ -21,8 +21,7 @@ private:
 	Matrix4 projectionMatrix;
 	Matrix4 inverseProjection;
 
-	StaticBody* clyde; 	// Orange Ghost - using Kinematic Wander algorithm
-	Character* blinky;  // Red Ghost - using dynamic arrive or flee algorithm
+	Character* blinky[2];  // Red Ghost - using dynamic arrive or flee algorithm
 	Body* tower;
 
 	Graph* graph; 
@@ -56,9 +55,7 @@ public:
 	Matrix4 getProjectionMatrix() { return projectionMatrix; }
 	Matrix4 getInverseMatrix() { return inverseProjection; }
 
-	
-
 	// vector to store the path found by Dijkstra
-	vector<Node*> path;
+	vector<Node*> path[2];
 };
 #endif;

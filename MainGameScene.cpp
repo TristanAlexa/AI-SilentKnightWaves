@@ -10,9 +10,11 @@ MainGameScene::MainGameScene(SDL_Window* sdlWindow_, GameManager* game_)
 	yAxis = 15.0f;
 
 	// Init NPCs
-	clyde = nullptr;
-	blinky = nullptr;
-
+	for (int i = 0; i < 2; i++)
+	{
+		blinky[i] = nullptr;
+	}
+	
 	tower = nullptr;
 
 	graph = NULL;
@@ -23,16 +25,15 @@ MainGameScene::MainGameScene(SDL_Window* sdlWindow_, GameManager* game_)
 MainGameScene::~MainGameScene()
 {
 	// Memory clean ups
-	if (clyde)
+	for (int i = 0; i < 2; i++)
 	{
-		delete clyde;
+		if (blinky[i])
+		{
+			blinky[i]->OnDestroy();
+			delete blinky;
+		}
 	}
-
-	if (blinky)
-	{
-		blinky->OnDestroy();
-		delete blinky;
-	}
+	
 	if (tower)
 		delete tower;
 	if (graph)
@@ -84,8 +85,13 @@ bool MainGameScene::OnCreate()
 	// Call dijksra to find shortest path and store the path in a Path obj
 	int startNode = 85;
 	int endNode = 42;
-	path = graph->Dijkstra(startNode, endNode);
-	Path* p = new Path(path);
+	path[0] = graph->Dijkstra(startNode, endNode);
+	Path* p = new Path(path[0]);
+
+	int startNode1 = 95;
+	int endNode1 = 42;
+	path[1] = graph->Dijkstra(startNode1, endNode1);
+	Path* p2 = new Path(path[1]);
 
 	/// Turn on the SDL imaging subsystem
 	IMG_Init(IMG_INIT_PNG);
@@ -101,33 +107,25 @@ bool MainGameScene::OnCreate()
 	game->getPlayer()->setImage(image);
 	game->getPlayer()->setTexture(texture);
 
-	// Set up staticbody NPC constructors and images
-	// CLYDE: orange
-	Vec3 position = Vec3(2.0f, 8.0f, 0.0f);
-	float orientation = 0.0f;
-	float maxSpeed = 2.5f;
-	float maxRotation = 3.5f;
-	clyde = new StaticBody(position, orientation, maxSpeed, maxRotation);
-
-	image = IMG_Load("Clyde.png");
-	texture = SDL_CreateTextureFromSurface(renderer, image);
-	clyde->setTexture(texture);
-	SDL_FreeSurface(image);
-
-
 	// Currently the character constructor defines what steering algorithm to use
-	blinky = new Character(); 
-	if (!blinky->OnCreate(this) || !blinky->setTextureWidth("Blinky.png"))
+	for (int i = 0; i < 2; i++)
 	{
-		return false;
+		blinky[i] = new Character();
+		if (!blinky[i]->OnCreate(this) || !blinky[i]->setTextureWidth("Blinky.png"))
+		{
+			return false;
+		}
+
+		if (!blinky[i]->readStateMachineXML("blinkySM.xml"))
+		{
+			return false;
+		}
 	}
 	
-	if (!blinky->readStateMachineXML("blinkySM.xml"))
-	{
-		return false;
-	}
-	blinky->setPath(p);
-	blinky->SetSpawnPoint(path[0]);
+	blinky[0]->setPath(p);
+	blinky[0]->SetSpawnPoint(path[0][0]);
+	blinky[1]->setPath(p2);
+	blinky[1]->SetSpawnPoint(path[1][0]);
 	
 	return true;
 }
@@ -135,15 +133,13 @@ bool MainGameScene::OnCreate()
 void MainGameScene::OnDestroy()
 {
 	// Memory clean ups
-	if (clyde)
+	for (int i = 0; i < 2; i++)
 	{
-		delete clyde;
-	}
-
-	if (blinky)
-	{
-		blinky->OnDestroy();
-		delete blinky;
+		if (blinky[i])
+		{
+			blinky[i]->OnDestroy();
+			delete blinky;
+		}
 	}
 	if (tower)
 		delete tower;
@@ -170,13 +166,12 @@ void MainGameScene::Update(const float deltaTime)
 	steering = NULL;
 
 	// Update characters and player
-	clyde->Update(deltaTime, steering);
-	blinky->Update(deltaTime);
+	blinky[0]->Update(deltaTime);
+	blinky[1]->Update(deltaTime);
 
 	Body* player;
 	player = game->getPlayer();
 	game->getPlayer()->Update(deltaTime);
-
 }
 
 void MainGameScene::Render()
@@ -193,34 +188,8 @@ void MainGameScene::Render()
 		}
 	}
 
-	// Render the static body Clyde
-	SDL_Rect square;
-	Vec3 screenCoords;
-	int    w, h;
-
-	// convert the position from game coords to screen coords
-	screenCoords = projectionMatrix * clyde->getPos();
-	float scale = 0.15f;
-	SDL_QueryTexture(clyde->getTexture(), nullptr, nullptr, &w, &h);
-
-	// The square's x and y values represent the top left corner of
-	// where SDL will draw the .png image
-	// The 0.5f * w/h offset is to place the .png so that pos represents the center
-	// (Note the y axis for screen coords points downward, hence subtractions!!!!)
-	square.w = static_cast<int>(w * scale);
-	square.h = static_cast<int>(h * scale);
-	square.x = static_cast<int>(screenCoords.x - 0.5f * square.w);
-	square.y = static_cast<int>(screenCoords.y - 0.5f * square.h);
-
-	float orientation = clyde->getOrientation();
-	// Convert character orientation from radians to degrees.
-	float orientationDegrees = orientation * 180.0f / M_PI;
-
-	// Render the NPC
-	SDL_RenderCopyEx(renderer, clyde->getTexture(), nullptr, &square,
-		orientationDegrees, nullptr, SDL_FLIP_NONE);
-
-	blinky->Render(0.15f);
+	blinky[0]->Render(0.15f);
+	blinky[1]->Render(0.15);
 	game->RenderPlayer(0.10f);
 	RenderTowerObj(0.3);
 	SDL_RenderPresent(renderer);
@@ -229,7 +198,8 @@ void MainGameScene::Render()
 void MainGameScene::HandleEvents(const SDL_Event& event)
 {
 	// Send events to NPCs as needed
-	blinky->HandleEvents(event);
+	blinky[0]->HandleEvents(event);
+	blinky[1]->HandleEvents(event);
 	// Send events to player as needed
 	game->getPlayer()->HandleEvents(event);
 }

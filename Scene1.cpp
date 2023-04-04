@@ -79,12 +79,7 @@ bool Scene1::OnCreate() {
 	{
 		return false;
 	}
-	// If this call is not successful, OnCreate() returns false
-	if (!blinky->readDecisionTreeXML("playerinrange.xml"))
-	{
-		return false;
-	}
-
+	
 	// end of character set ups
 	return true;
 }

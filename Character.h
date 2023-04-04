@@ -18,27 +18,27 @@
 #include "StateMachine.h"
 #include "ConditionInRange.h"
 #include "ConditionInJail.h"
+#include "ConditionLowHealth.h"
 
 using namespace std;
 
 class Character  //NPC
 {
 private:
+	int health = 3;
+
 	class KinematicBody* body;
 	class Scene* scene;
 	Path* path;
-	// Decider variable to hold the Decision Tree
-	DecisionTreeNode* decider;
-	StateMachine* stateMachine;
 	
-
+	DecisionTreeNode* decider; //DecisionTree instance
+	StateMachine* stateMachine; //StateMachine instance
+	
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
 	void SteerToArriveToPlayer(SteeringOutput* steering);
 	void SteerToFollowPath(SteeringOutput* steering);
 
-	int health = 3;
-	
 public:
 
 	// Construct char defining an int that selects a steering algorithm
@@ -46,7 +46,6 @@ public:
 	{
 		body = NULL;
 		scene = NULL;
-		//steerType = steerType_;
 		path = NULL;
 		decider = NULL;
 		stateMachine = NULL;
@@ -64,7 +63,6 @@ public:
 	void HandleEvents(const SDL_Event& event);
 	void Render(float scale = 1.0f);
 
-
 	Vec3 getPos();
 	Vec3 getPlayerPos();
 	// Set the position of a character to a node in the tile grid
@@ -74,13 +72,12 @@ public:
 	// Return the body of the character
 	KinematicBody* getBody() { return body; }
 
+	// Functions to read and manipulate health variable
 	int getHealth();
-	void takeDamage(int damage_);
+	void setHealth(int health_) { health = health_; }
 
 	// Decision making
-	bool readDecisionTreeXML(string filename_);
 	bool readStateMachineXML(string filename_);
-
 };
 
 #endif

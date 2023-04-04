@@ -68,6 +68,8 @@ void Character::Update(float deltaTime)
 		{
 		case STATE::SEEK:
 			SteerToSeekPlayer(steering);
+		case STATE::FLEE:
+			SteerToFleePlayer(steering);
 		case STATE::ARRIVE:
 			SteerToArriveToPlayer(steering);
 			break;
@@ -79,12 +81,6 @@ void Character::Update(float deltaTime)
 			break;
 		}
 	}
-	
-	
-	/*else if (steerType == 2)
-	{
-		SteerToFleePlayer(steering);
-	}*/
 	
 	// apply the steering to the equations of motion
 	body->Update(deltaTime, steering);
@@ -218,13 +214,23 @@ void Character::SteerToFollowPath(SteeringOutput* steering)
 
 void Character::HandleEvents(const SDL_Event& event)
 {
-	// To simulate combat: when E is pressed, the char will take damage, lowering its health
 	if (event.type == SDL_KEYDOWN)
 	{
 		switch (event.key.keysym.scancode)
 		{
+		// To simulate combat: when E is pressed, the char will take damage, lowering its health
 		case SDL_SCANCODE_E:
-			takeDamage(1);
+			setHealth(health - 1);
+			cout << "Blinky took damage!" << endl;
+			cout << "Blinky's current Health Points: " << health << endl;
+			break;
+
+		// To simulate AI healing itself
+		case SDL_SCANCODE_R:
+			setHealth(3);
+			cout << "Blinky healed itself!" << endl;
+			cout << "Blinky's current Health Points: " << health << endl;
+			break;
 		}
 	}
 }
@@ -275,32 +281,43 @@ int Character::getHealth()
 	return health;
 }
 
-void Character::takeDamage(int damage_)
-{
-	this->health -= damage_;
-}
-
-
 bool Character::readStateMachineXML(string filename_)
 {
 	stateMachine = new StateMachine();
 
+	// Define character states
 	State* followAPath = new State(STATE::FOLLOWAPATH);
 	State* arriveToPlayer = new State(STATE::ARRIVE);
-	State* doNothing = new State(STATE::DO_NOTHING); //1.
+	State* fleePlayer = new State(STATE::FLEE);
+	State* doNothing = new State(STATE::DO_NOTHING); 
 
+	// Character's default state is to follow the set path
+	stateMachine->setInitialState(followAPath);
+
+	/* While AI is following the path, if the player comes in range,
+	   the AI will transition to arrive to the player*/
 	Condition* ifInRange = new ConditionInRange(this);
-
 	followAPath->addTransition(new Transition(ifInRange, arriveToPlayer));
 
+	/* While AI is following the player, if the player moves out of range,
+	   the AI will transition back to the default state*/
 	Condition* ifOutOfRange = new ConditionOutOfRange(this);
-
 	arriveToPlayer->addTransition(new Transition(ifOutOfRange, followAPath));
 
-	Condition* ifInJail = new ConditionInJail(this); //3. create condition in jail
+	/* When the AI is following the player and gets in range of a jail cell,
+	   the AI will transition to do nothing. Its trapped*/
+	Condition* ifInJail = new ConditionInJail(this); 
+	arriveToPlayer->addTransition(new Transition(ifInJail, doNothing));
 
-	arriveToPlayer->addTransition(new Transition(ifInJail, doNothing)); //2.
+	/* If the AI is following the player, and if the AI's health drops below a threshold
+	   the AI will transition to flee the player*/
+	Condition* ifLowHealth = new ConditionLowHealth(this);
+	arriveToPlayer->addTransition(new Transition(ifLowHealth, fleePlayer));
 
-	stateMachine->setInitialState(followAPath);
+	/* If the AI is fleeing the player, and manages to return back to full health,
+	   the AI will transition back to the default state of following its path*/
+	Condition* ifHealthy = new ConditionHealthy(this);
+	fleePlayer->addTransition(new Transition(ifHealthy, followAPath));
+
 	return true;
 }

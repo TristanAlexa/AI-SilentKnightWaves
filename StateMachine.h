@@ -7,7 +7,7 @@
 class Transition;
 using namespace std;
 
-enum class STATE { SEEK, ARRIVE, FOLLOWAPATH, DO_NOTHING };
+enum class STATE { SEEK, FLEE, ARRIVE, FOLLOWAPATH, DO_NOTHING };
 
 class State
 {

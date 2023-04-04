@@ -169,11 +169,6 @@ void MainGameScene::Update(const float deltaTime)
 	KinematicSteeringOutput* steering;
 	steering = NULL;
 
-		// Create Kinematic Wander 
-	KinematicWander* steeringAlgorithm;
-	steeringAlgorithm = new KinematicWander(clyde);
-	steering = steeringAlgorithm->getSteering();
-
 	// Update characters and player
 	clyde->Update(deltaTime, steering);
 	blinky->Update(deltaTime);
@@ -182,10 +177,6 @@ void MainGameScene::Update(const float deltaTime)
 	player = game->getPlayer();
 	game->getPlayer()->Update(deltaTime);
 
-	if (steeringAlgorithm)
-	{
-		delete steeringAlgorithm;
-	}
 }
 
 void MainGameScene::Render()

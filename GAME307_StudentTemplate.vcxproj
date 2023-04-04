@@ -141,6 +141,7 @@
     <ClCompile Include="Condition.cpp" />
     <ClCompile Include="ConditionInJail.cpp" />
     <ClCompile Include="ConditionInRange.cpp" />
+    <ClCompile Include="ConditionLowHealth.cpp" />
     <ClCompile Include="Decision.cpp" />
     <ClCompile Include="DecisionTreeNode.cpp" />
     <ClCompile Include="Flee.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Condition.h" />
     <ClInclude Include="ConditionInJail.h" />
     <ClInclude Include="ConditionInRange.h" />
+    <ClInclude Include="ConditionLowHealth.h" />
     <ClInclude Include="Decision.h" />
     <ClInclude Include="DecisionTreeNode.h" />
     <ClInclude Include="Flee.h" />

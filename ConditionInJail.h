@@ -7,7 +7,7 @@ using namespace MATH;
 class ConditionInJail : public Condition
 {
 public:
-	ConditionInJail(Character* owner_) : Condition{ owner_ }{}
+	ConditionInJail(CharacterAdapter* owner_) : Condition{ owner_ }{}
 	bool test();
 };
 

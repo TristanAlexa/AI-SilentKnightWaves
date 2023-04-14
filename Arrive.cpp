@@ -19,20 +19,18 @@ SteeringOutput* Arrive::getSteering()
 	float distance = VMath::mag(direction);
 
 	// Radius check for arriving 
-	if (distance < targetRadius)
-	{
+	if (distance < targetRadius) {
 		return NULL;
 	}
 
 	float targetSpeed;
 	Vec3 targetVelocity;
+
 	// Use max speed when outside the slow radius
-	if (distance > slowRadius)
-	{
+	if (distance > slowRadius) {
 		targetSpeed = maxSpeed;
 	}
-	else
-	{
+	else {
 		targetSpeed = maxSpeed * distance / slowRadius;
 	}
 
@@ -46,8 +44,7 @@ SteeringOutput* Arrive::getSteering()
 	result->linear /= timeToTarget;
 
 	// Clip to max accel
-	if (VMath::mag(result->linear) > maxAccel)
-	{
+	if (VMath::mag(result->linear) > maxAccel) {
 		result->linear = VMath::normalize(result->linear);
 		result->linear *= maxAccel;
 	}

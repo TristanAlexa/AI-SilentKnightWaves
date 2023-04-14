@@ -4,6 +4,9 @@ bool Character::OnCreate(Scene* scene_)
 {
 	scene = scene_;
 
+	// Set up adapter
+	myAdapter = new CharacterAdapter{ this };
+
 	// Configure and instantiate the body to use for the demo
 	if (!body)
 	{
@@ -66,9 +69,6 @@ void Character::Update(float deltaTime)
 		stateMachine->update();
 		switch (stateMachine->getCurrentStateName())
 		{
-		case STATE::SEEK:
-			SteerToSeekPlayer(steering);
-			break;
 		case STATE::FLEE:
 			SteerToFleePlayer(steering);
 			break;
@@ -263,12 +263,12 @@ void Character::Render(float scale)
 		orientation, nullptr, SDL_FLIP_NONE);
 }
 
-Vec3 Character::getPos()
+Vec3 Character::getPos() const
 {
 	return body->getPos();
 }
 
-Vec3 Character::getPlayerPos()
+Vec3 Character::getPlayerPos() const
 {
 	return scene->game->getPlayer()->getPos();
 }
@@ -298,27 +298,27 @@ bool Character::readStateMachineXML(string filename_)
 
 	/* While AI is following the path, if the player comes in range,
 	   the AI will transition to arrive to the player*/
-	Condition* ifInRange = new ConditionInRange(this);
+	Condition* ifInRange = new ConditionInRange(myAdapter);
 	followAPath->addTransition(new Transition(ifInRange, arriveToPlayer));
 
 	/* While AI is following the player, if the player moves out of range,
 	   the AI will transition back to the default state*/
-	Condition* ifOutOfRange = new ConditionOutOfRange(this);
+	Condition* ifOutOfRange = new ConditionOutOfRange(myAdapter);
 	arriveToPlayer->addTransition(new Transition(ifOutOfRange, followAPath));
 
 	/* When the AI is following the player and gets in range of a jail cell,
 	   the AI will transition to do nothing. Its trapped*/
-	Condition* ifInJail = new ConditionInJail(this); 
+	Condition* ifInJail = new ConditionInJail(myAdapter);
 	arriveToPlayer->addTransition(new Transition(ifInJail, doNothing));
 
 	/* If the AI is following the player, and if the AI's health drops below a threshold
 	   the AI will transition to flee the player*/
-	Condition* ifLowHealth = new ConditionLowHealth(this);
+	Condition* ifLowHealth = new ConditionLowHealth(myAdapter);
 	arriveToPlayer->addTransition(new Transition(ifLowHealth, fleePlayer));
 
 	/* If the AI is fleeing the player, and manages to return back to full health,
 	   the AI will transition back to the default state of following its path*/
-	Condition* ifHealthy = new ConditionHealthy(this);
+	Condition* ifHealthy = new ConditionHealthy(myAdapter);
 	fleePlayer->addTransition(new Transition(ifHealthy, followAPath));
 
 	return true;

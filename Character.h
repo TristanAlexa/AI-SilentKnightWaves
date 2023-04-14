@@ -19,6 +19,7 @@
 #include "ConditionInRange.h"
 #include "ConditionInJail.h"
 #include "ConditionLowHealth.h"
+#include "CharacterAdapter.h"
 
 using namespace std;
 
@@ -33,6 +34,8 @@ private:
 	
 	DecisionTreeNode* decider; //DecisionTree instance
 	StateMachine* stateMachine; //StateMachine instance
+
+	CharacterAdapter* myAdapter;
 	
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
@@ -63,8 +66,8 @@ public:
 	void HandleEvents(const SDL_Event& event);
 	void Render(float scale = 1.0f);
 
-	Vec3 getPos();
-	Vec3 getPlayerPos();
+	Vec3 getPos() const;
+	Vec3 getPlayerPos() const;
 	// Set the position of a character to a node in the tile grid
 	void SetSpawnPoint(Node* node_);
 	// Set the path of tiles to follow

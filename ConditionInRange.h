@@ -7,7 +7,7 @@ using namespace MATH;
 class ConditionInRange : public Condition
 {
 public:
-	ConditionInRange(Character* owner_) : Condition{ owner_ } 
+	ConditionInRange(CharacterAdapter* owner_) : Condition{ owner_ } 
 	{
 		//initialize any local variables here
 	}
@@ -18,7 +18,7 @@ public:
 class ConditionOutOfRange : public Condition
 {
 public:
-	ConditionOutOfRange(Character* owner_) : Condition{ owner_ }
+	ConditionOutOfRange(CharacterAdapter* owner_) : Condition{ owner_ }
 	{
 		//initialize any local variables here
 	}

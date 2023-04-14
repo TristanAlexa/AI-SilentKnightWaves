@@ -1,5 +1,5 @@
 #include "ConditionInRange.h"
-#include "Character.h"
+#include "CharacterAdapter.h"
 
 bool ConditionInRange::test()
 {

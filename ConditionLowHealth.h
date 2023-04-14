@@ -4,14 +4,14 @@
 class ConditionLowHealth : public Condition
 {
 public:
-	ConditionLowHealth(Character* owner_) : Condition{ owner_ } {}
+	ConditionLowHealth(CharacterAdapter* owner_) : Condition{ owner_ } {}
 	bool test();
 };
 
 class ConditionHealthy : public Condition
 {
 public:
-	ConditionHealthy(Character* owner_) : Condition{ owner_ } {}
+	ConditionHealthy(CharacterAdapter* owner_) : Condition{ owner_ } {}
 	bool test();
 };
 #endif;

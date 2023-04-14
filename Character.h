@@ -36,7 +36,7 @@ private:
 	StateMachine* stateMachine; //StateMachine instance
 
 	CharacterAdapter* myAdapter;
-	
+
 	void SteerToSeekPlayer(SteeringOutput* steering);     
 	void SteerToFleePlayer(SteeringOutput* steering);
 	void SteerToArriveToPlayer(SteeringOutput* steering);

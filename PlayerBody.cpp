@@ -120,10 +120,12 @@ void PlayerBody::HandleEvents( const SDL_Event& event )
         if (event.type == SDL_KEYDOWN && event.key.repeat == 0)
         {
             int fps = 60;
+            Vec3 dir = GetMousePos() - pos;
+            dir = VMath::normalize(dir) * 5.0;
             switch (event.key.keysym.scancode)
             {
             case SDL_SCANCODE_SPACE:
-                particles.createParticle(pos, 3.0 * vel, 2 * fps);
+                particles.createParticle(pos, dir, 2 * fps);
                 break;
             default:
                 break;
@@ -218,4 +220,20 @@ void PlayerBody::Update( float deltaTime )
 void PlayerBody::resetToOrigin()
 {
     pos = Vec3( 0.0f + radius, 0.0f + radius, 0.0f );
+}
+
+Vec3 PlayerBody::GetMousePos()
+{
+    int x, y;
+
+    // convert mouse's screen coords to world coords
+    
+    SDL_GetMouseState(&x, &y);
+
+
+
+    Vec3 mouseCoords = Vec3(float(x), float(y), 0.0f);
+    return MMath::inverse(game->getProjectionMatrix()) * mouseCoords;
+
+
 }
